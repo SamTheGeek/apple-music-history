@@ -4,7 +4,7 @@
 
 Client React app to get info from your apple music history
 
-Read more [on my site](https://patmurray.co/projects/apple-music-analyser/)
+Read more [on Pat Murray's site](https://patmurray.co/projects/apple-music-analyser/)
 
 ## Using
 
