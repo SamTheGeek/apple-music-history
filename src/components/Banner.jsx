@@ -4,36 +4,36 @@ import CsvParse from '@vtex/react-csv-parse';
 
 const keys = [
     "Apple Id Number",
-    "Event End Timestamp",
-    "Event Received Timestamp",
-    "Device Identifier",
-    "Build Version",
-    "Milliseconds Since Play",
-    "Source Type",
-    "Metrics Bucket Id",
-    "Event Start Timestamp",
-    "Feature Name",
-    "Store Country Name",
-    "Start Position In Milliseconds",
-    "Play Duration Milliseconds",
-    "Event Type",
-    "End Position In Milliseconds",
-    "Metrics Client Id",
-    "Media Type",
-    "End Reason Type",
-    "Item Type",
-    "Event Reason Hint Type",
-    "Media Duration In Milliseconds",
-    "Offline",
-    "UTC Offset In Seconds",
     "Apple Music Subscription",
-    "Client IP Address",
-    "Content Provider",
-    "Content Name",
-    "Genre",
     "Artist Name",
+    "Build Version",
+    "Client IP Address",
+    "Content Name",
+    "Content Provider",
     "Content Specific Type",
-    "Original Title"
+    "Device Identifier",
+    "End Position In Milliseconds",
+    "End Reason Type",
+    "Event End Timestamp",
+    "Event Reason Hint Type",
+    "Event Received Timestamp",
+    "Event Start Timestamp",
+    "Event Type",
+    "Feature Name",
+    "Genre",
+    "Item Type",
+    "Media Duration In Milliseconds",
+    "Media Type",
+    "Metrics Bucket Id",
+    "Metrics Client Id",
+    "Milliseconds Since Play",
+    "Offline",
+    "Original Title",
+    "Play Duration Milliseconds",
+    "Source Type",
+    "Start Position In Milliseconds",
+    "Store Country Name",
+    "UTC Offset In Seconds"
 ];
 
 class Banner extends Component {
@@ -60,7 +60,7 @@ class Banner extends Component {
                         onDataUploaded={data => {
 
                             this.props.dataResponseHandler(data);
-                            
+
                         }}
                         onError={err => {
 
@@ -69,7 +69,7 @@ class Banner extends Component {
                         }}
                         render={onChange => <div><input id="file" name="file" className="inputfile" type="file" onChange={onChange} /><p>Loading may take a moment... be patient</p></div>}
                     />
-                    
+
                 </Jumbotron>
 
                 <div className="box">
