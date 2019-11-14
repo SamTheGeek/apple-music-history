@@ -22,8 +22,8 @@ class ErrorBoundary extends Component {
             //render fallback UI
             return (
               <div>
-                  <button>An Error Has Occured</button>
-                    <a onClick={() => Sentry.showReportDialog()}>Please click here to Report feedback</a>
+                  <h1>An Error Has Occured</h1>
+                    <button onClick={() => Sentry.showReportDialog()}>Please click here to Report feedback</button>
             </div>
             );
         } else {
