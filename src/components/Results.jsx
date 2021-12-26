@@ -139,7 +139,7 @@ class Results extends Component {
             const artist = this.state.artists[index];
             const div = <div className="box year" key={artist.key}>
                 <div>
-                    <p style={{ marginBottom: 0 }}>Most played artist {index + 1}</p>
+                    <p style={{ marginBottom: 0 }}>Most played artist No.{index + 1}</p>
                     <h1>{artist.key}</h1>
                 </div>
                 <div>

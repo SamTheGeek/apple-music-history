@@ -3,37 +3,44 @@ import { Jumbotron } from 'reactstrap';
 import CsvParse from '@vtex/react-csv-parse';
 
 const keys = [
-    "Apple Id Number",
-    "Event End Timestamp",
-    "Event Received Timestamp",
-    "Device Identifier",
-    "Build Version",
-    "Milliseconds Since Play",
-    "Source Type",
-    "Metrics Bucket Id",
-    "Event Start Timestamp",
-    "Feature Name",
-    "Store Country Name",
-    "Start Position In Milliseconds",
-    "Play Duration Milliseconds",
-    "Event Type",
-    "End Position In Milliseconds",
-    "Metrics Client Id",
-    "Media Type",
-    "End Reason Type",
-    "Item Type",
-    "Event Reason Hint Type",
-    "Media Duration In Milliseconds",
-    "Offline",
-    "UTC Offset In Seconds",
+    "Apple ID Number",
     "Apple Music Subscription",
-    "Client IP Address",
-    "Content Provider",
-    "Content Name",
-    "Genre",
     "Artist Name",
-    "Content Specific Type",
-    "Original Title"
+    "Build Version",
+    "Client IP Address",
+    "Device Identifier",
+    "End Position In Milliseconds",
+    "End Reason Type",
+    "Event End Timestamp",
+    "Event Reason Hint Type",
+    "Event Received Timestamp",
+    "Event Start Timestamp",
+    "Event Type",
+    "Feature Name",
+    "Item Type",
+    "Media Duration In Milliseconds",
+    "Media Type",
+    "Metrics Bucket Id",
+    "Metrics Client Id",
+    "Milliseconds Since Play",
+    "Offline",
+    "Play Duration Milliseconds",
+    "Provided Audio Bit Depth",
+    "Provided Audio Channel",
+    "Provided Audio Sample Rate",
+    "Provided Bit Rate",
+    "Provided Codec",
+    "Provided Playback Format",
+    "Session Is Shared",
+    "Shared Activity Devices-Current",
+    "Shared Activity Devices-Max",
+    "Song Name",
+    "Source Type",
+    "Start Position In Milliseconds",
+    "Store Front Name",
+    "User’s Audio Quality",
+    "User’s Playback Format",
+    "UTC Offset In Seconds"
 ];
 
 class Banner extends Component {
@@ -58,8 +65,20 @@ class Banner extends Component {
 
                         keys={keys}
                         onDataUploaded={data => {
+                            var filterDate = document.getElementById("filterDate").value;
 
-                            this.props.dataResponseHandler(data);
+                            if (filterDate.length > 1) {
+                                var tempArray = [];
+                                for(var i = 0; i < data.length; i++) {
+                                    if (data[i]["Event End Timestamp"] >= filterDate + "T00:00:00" || data[i]["Event Start Timestamp"] >= filterDate + "T00:00:00") {
+                                        tempArray.push(data[i]);                                        
+                                    }
+                                }
+                                this.props.dataResponseHandler(tempArray);
+                            } else {
+                                this.props.dataResponseHandler(data);
+                            }
+
                             
                         }}
                         onError={err => {
@@ -67,7 +86,7 @@ class Banner extends Component {
                             alert('Error Occured\n\n' + err.reason + '\n\n Please contact @_patmurray on twitter for more help.')
 
                         }}
-                        render={onChange => <div><input id="file" name="file" className="inputfile" type="file" onChange={onChange} /><p>Loading may take a moment... be patient</p></div>}
+                        render={onChange => <div><div style={{marginBottom: '20px'}}><p>If you want to specify the start of the report, such as to only include 2021, input 01-01-2021 below. Otherwise, if you leave it blank it will generate the report based on all the data in the Apple Music Play Activity.csv file. </p>Choose date: <input id="filterDate" type="date" /></div><input id="file" name="file" className="inputfile" type="file" onChange={onChange} /><p>Loading may take a moment... be patient</p></div>}
                     />
                     
                 </Jumbotron>
