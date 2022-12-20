@@ -79,16 +79,15 @@ class Banner extends Component {
                                 this.props.dataResponseHandler(data);
                             }
 
-                            
                         }}
                         onError={err => {
 
-                            alert('Error Occured\n\n' + err.reason + '\n\n Please contact @_patmurray on twitter for more help.')
+                            alert('Error Occured\n\n' + err.reason + '\n\n Please contact @samthegeek on twitter for more help.')
 
                         }}
                         render={onChange => <div><div style={{marginBottom: '20px'}}><p>If you want to specify the start of the report, such as to only include 2021, input 01-01-2021 below. Otherwise, if you leave it blank it will generate the report based on all the data in the Apple Music Play Activity.csv file. </p>Choose date: <input id="filterDate" type="date" /></div><input id="file" name="file" className="inputfile" type="file" onChange={onChange} /><p>Loading may take a moment... be patient</p></div>}
                     />
-                    
+
                 </Jumbotron>
 
                 <div className="box">

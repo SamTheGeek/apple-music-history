@@ -1,15 +1,14 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/e207d990-1ee1-4e26-92b0-b549f20acb0e/deploy-status)](https://app.netlify.com/sites/ecstatic-benz-b66b84/deploys)
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8b888380-b867-4870-91c8-04ebdf823036/deploy-status)](https://app.netlify.com/sites/awesome-agnesi-2f5b8f/deploys)
 
 # [Apple Music History](https://music.patmurray.co)
 
-Client React app to get info from your apple music history 
+Client React app to get info from your apple music history
 
-Read more [on my site](https://patmurray.co/projects/apple-music-analyser/)
+Read more [on Pat Murray's site](https://patmurray.co/projects/apple-music-analyser/)
 
 ## Using
 
-Follow [this guide from MacRumors](https://www.macrumors.com/2018/11/29/web-app-apple-music-history/) on how to download your data and use the site 
+Follow [this guide from MacRumors](https://www.macrumors.com/2018/11/29/web-app-apple-music-history/) on how to download your data and use the site
 
 ## Getting Started
 
@@ -19,4 +18,3 @@ Follow [this guide from MacRumors](https://www.macrumors.com/2018/11/29/web-app-
 4. Run `npm run start` to run the hot-reloading development server local. This runs at `localhost:3000`.
 
 To build for production run `npm run build` and deploy the `/build` folder to your server.
-

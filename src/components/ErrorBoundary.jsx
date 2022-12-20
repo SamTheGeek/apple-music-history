@@ -23,7 +23,7 @@ class ErrorBoundary extends Component {
             return (
               <div>
                   <h1>An Error Has Occured</h1>
-                    <a onClick={() => Sentry.showReportDialog()}>Please click here to Report feedback</a>
+                    <button onClick={() => Sentry.showReportDialog()}>Please click here to Report feedback</button>
             </div>
             );
         } else {
