@@ -29,9 +29,9 @@ class TotalsBoxes extends Component {
 
         var totalsBox = <div className="box year" key="totals">
             <div>
-                <p className="lead">Total you've listened to</p>
+                <p className="lead">You've listened to</p>
                 <h2>{Computation.convertTime(this.state.totals.totalTime)}</h2>
-                <p className="lead">of music</p>
+                <p className="lead">of music, or {(Math.round((this.state.totals.totalTime / 1000) / 60)).toLocaleString()} minutes.</p>
             </div>
             <div>
                 <h2>{numeral(this.state.totals.totalPlays).format('0,0')}</h2>
