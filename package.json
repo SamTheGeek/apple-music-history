@@ -10,6 +10,8 @@
     "@vx/scale": "0.0.179",
     "@vx/shape": "0.0.179",
     "bootstrap": "^4.3.1",
+    "browserslist": "^4.7.2",
+    "caniuse-lite": "^1.0.30001009",
     "chart.js": "^1.1.1",
     "downloadjs": "^1.4.7",
     "html2canvas": "^1.0.0-rc.5",
