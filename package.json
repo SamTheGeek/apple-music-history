@@ -30,7 +30,7 @@
     "react-intl-formatted-duration": "^2.0.2",
     "react-loader": "^2.4.5",
     "react-moment": "^0.8.4",
-    "react-scripts": "^2.1.2",
+    "react-scripts": "^5.0.1",
     "react-slick": "^0.29.0",
     "react-table": "^6.10.3",
     "react-tooltip": "^3.11.1",
