@@ -26,7 +26,7 @@
     "react-dom": "^16.11.0",
     "react-file-reader": "^1.1.4",
     "react-heatmap-grid": "^0.5.3",
-    "react-intl": "^2.9.0",
+    "react-intl": "^6.2.5",
     "react-intl-formatted-duration": "^2.0.2",
     "react-loader": "^2.4.5",
     "react-moment": "^0.8.4",
