@@ -3,7 +3,7 @@
 > **Warning**
 > With the release of Apple's native tool for music history, I've decided to retire the tool as it is stuck in dependency hell. Feel free to fork and bring it up to date if you wish, but don't expect it to work with any Apple data exports after 2022-01-01.
 
-# [Apple Music History](https://music.patmurray.co)
+# [Apple Music History](https://music.samthegeek.net)
 
 Client React app to get info from your apple music history
 
