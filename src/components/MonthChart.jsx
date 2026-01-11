@@ -26,18 +26,6 @@ ChartJS.register(
 
 class MonthChart extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            months: props.months
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({ months: nextProps.months});
-    }
-
-
     render() {
 
         const rawData = Computation.convetrData(this.state.months);
@@ -68,6 +56,7 @@ class MonthChart extends Component {
         };
 
         const linechart = <Line data={data} width="600" height="300" options={options} />
+        var linechart = <LineChart data={Computation.convetrData(this.props.months)} width="600" height="300" options={{ bezierCurve: true, bezierCurveTension: 0.3, pointDot: false }} />
 
 
         return (
