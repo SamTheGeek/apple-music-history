@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@sentry/browser": "^4.6.6",
-    "@vtex/react-csv-parse": "^3.0.2",
     "@vx/group": "0.0.170",
     "@vx/mock-data": "0.0.179",
     "@vx/scale": "0.0.179",
@@ -20,6 +19,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.27",
     "numeral": "^2.0.6",
+    "papaparse": "^4.6.1",
     "react": "^16.11.0",
     "react-calendar-heatmap": "^1.8.1",
     "react-chartjs": "^1.2.0",
