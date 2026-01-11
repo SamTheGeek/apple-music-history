@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sentry/browser": "^4.6.6",
     "@sentry/react": "^8.0.0",
     "@vtex/react-csv-parse": "^3.0.2",
     "@vx/group": "0.0.170",
@@ -20,6 +21,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.27",
     "numeral": "^2.0.6",
+    "papaparse": "^4.6.1",
     "react": "^16.11.0",
     "react-calendar-heatmap": "^1.8.1",
     "react-chartjs-2": "^5.2.0",
