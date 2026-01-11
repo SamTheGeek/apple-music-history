@@ -171,6 +171,22 @@
     cursor: not-allowed;
 }
 
+.collapse-panel {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease, opacity 200ms ease;
+}
+
+.collapse-panel.is-open {
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.collapse-panel__content {
+    padding-top: 0.5rem;
+}
+
 .artists .year {
     min-height: min-intrinsic;
 }

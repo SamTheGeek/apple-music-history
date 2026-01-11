@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button, Collapse } from 'reactstrap';
 import numeral from 'numeral';
 
 
@@ -55,10 +54,21 @@ class ReasonsBox extends Component {
 
 
         const div = <div className="box" key="reasons">
-            <div> <h1>Reasons A Song Finished Playing <Button outline color="secondary" size="sm" onClick={this.toggle}>{this.state.collapse ? 'Close' : 'Open'}</Button></h1>  </div>
-            <Collapse isOpen={this.state.collapse}>
-                <div className="reasons"> {reasonsBoxes} </div>
-            </Collapse>
+            <div>
+                <h1>
+                    Reasons A Song Finished Playing{' '}
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={this.toggle}
+                    >
+                        {this.state.collapse ? 'Close' : 'Open'}
+                    </button>
+                </h1>
+            </div>
+            <div className={`collapse-panel${this.state.collapse ? ' is-open' : ''}`}>
+                <div className="reasons collapse-panel__content"> {reasonsBoxes} </div>
+            </div>
         </div>
 
 

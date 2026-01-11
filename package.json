@@ -13,14 +13,13 @@
     "downloadjs": "^1.4.7",
     "html2canvas": "^1.4.1",
     "jsonp": "^0.2.1",
-    "match-sorter": "^6.3.4",
+    "match-sorter": "^8.2.0",
     "numeral": "^2.0.6",
     "papaparse": "^5.4.1",
     "react": "^19.2.3",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^19.2.3",
-    "react-tooltip": "^5.28.0",
-    "reactstrap": "^9.2.3"
+    "react-tooltip": "^5.28.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",

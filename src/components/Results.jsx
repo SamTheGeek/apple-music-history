@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button } from 'reactstrap';
 import Computation from "./Computation";
 import numeral from 'numeral';
 
@@ -269,7 +268,16 @@ class Results extends Component {
                     <ReasonsBox reasons={this.state.reasons} />
 
                     <div className="box">
-                        <div className="title-flex"><h1>All Songs</h1> <Button outline color="secondary" size="sm" onClick={() => this.clearExcluded()} active={this.state.excludedSongs.length > 0}>Clear Excluded ({this.state.excludedSongs.length})</Button></div>
+                        <div className="title-flex">
+                            <h1>All Songs</h1>
+                            <button
+                                type="button"
+                                className={`btn btn-outline-secondary btn-sm${this.state.excludedSongs.length > 0 ? ' active' : ''}`}
+                                onClick={() => this.clearExcluded()}
+                            >
+                                Clear Excluded ({this.state.excludedSongs.length})
+                            </button>
+                        </div>
                         <AllSongsTable addExcluded={row => this.addExcluded(row)} songs={this.state.songs} />
                     </div>
 
