@@ -84,6 +84,93 @@
     border: 1px solid #ced4da;
 }
 
+.all-songs-table .table-wrapper {
+    overflow-x: auto;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.all-songs-table table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.all-songs-table th,
+.all-songs-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.all-songs-table th {
+    background: #f8f9fa;
+    text-align: left;
+    font-weight: 600;
+}
+
+.all-songs-table tr:hover td {
+    background: #f5f7fa;
+}
+
+.all-songs-table .align-right {
+    text-align: right;
+}
+
+.all-songs-table .align-center {
+    text-align: center;
+}
+
+.all-songs-table .table-sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: none;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    color: inherit;
+}
+
+.all-songs-table .sort-indicator {
+    font-size: 0.85em;
+    color: #6c757d;
+}
+
+.all-songs-table .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #6c757d;
+}
+
+.all-songs-table .table-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.all-songs-table .pagination-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.all-songs-table .pagination-controls button {
+    border: 1px solid #ced4da;
+    background: white;
+    border-radius: 0.4rem;
+    padding: 0.35rem 0.75rem;
+}
+
+.all-songs-table .pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .artists .year {
     min-height: min-intrinsic;
 }
@@ -120,52 +207,87 @@ body {
     outline: -webkit-focus-ring-color auto 5px;
 }
 
-.react-calendar-heatmap .color-empty {
-    fill: #EEEEEE;
+.calendar-heatmap {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
 }
 
-.react-calendar-heatmap .color-scale-0 {
-    fill: #EEEEEE;
+.calendar-heatmap__weekday-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: #6c757d;
+    padding-top: 2px;
 }
 
-.react-calendar-heatmap .color-scale-10 {
-    fill: #DCE6EF;
+.calendar-heatmap__grid {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 4px;
 }
 
-.react-calendar-heatmap .color-scale-20 {
-    fill: #CADEF0;
+.calendar-heatmap__week {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.react-calendar-heatmap .color-scale-30 {
-    fill: #B8D6F2;
+.calendar-heatmap__day {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background-color: #EEEEEE;
 }
 
-.react-calendar-heatmap .color-scale-40 {
-    fill: #A6CFF3;
+.calendar-heatmap .color-empty {
+    background-color: #EEEEEE;
 }
 
-.react-calendar-heatmap .color-scale-50 {
-    fill: #94C7F5;
+.calendar-heatmap .color-scale-0 {
+    background-color: #EEEEEE;
 }
 
-.react-calendar-heatmap .color-scale-60 {
-    fill: #82BFF6;
+.calendar-heatmap .color-scale-10 {
+    background-color: #DCE6EF;
 }
 
-.react-calendar-heatmap .color-scale-70 {
-    fill: #70B8F7;
+.calendar-heatmap .color-scale-20 {
+    background-color: #CADEF0;
 }
 
-.react-calendar-heatmap .color-scale-80 {
-    fill: #5EB0F9;
+.calendar-heatmap .color-scale-30 {
+    background-color: #B8D6F2;
 }
 
-.react-calendar-heatmap .color-scale-90 {
-    fill: #4CA8FA;
+.calendar-heatmap .color-scale-40 {
+    background-color: #A6CFF3;
 }
 
-.react-calendar-heatmap .color-scale-100 {
-    fill: #3AA1FC;
+.calendar-heatmap .color-scale-50 {
+    background-color: #94C7F5;
+}
+
+.calendar-heatmap .color-scale-60 {
+    background-color: #82BFF6;
+}
+
+.calendar-heatmap .color-scale-70 {
+    background-color: #70B8F7;
+}
+
+.calendar-heatmap .color-scale-80 {
+    background-color: #5EB0F9;
+}
+
+.calendar-heatmap .color-scale-90 {
+    background-color: #4CA8FA;
+}
+
+.calendar-heatmap .color-scale-100 {
+    background-color: #3AA1FC;
 }
 
 .sk-fading-circle {

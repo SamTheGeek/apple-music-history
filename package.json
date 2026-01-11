@@ -17,12 +17,10 @@
     "numeral": "^2.0.6",
     "papaparse": "^5.4.1",
     "react": "^19.2.3",
-    "react-calendar-heatmap": "^1.9.1",
     "react-chartjs-2": "^5.2.0",
-    "react-data-table-component": "^7.6.2",
     "react-dom": "^19.2.3",
     "react-tooltip": "^5.28.0",
-    "reactstrap": "^9.2.2"
+    "reactstrap": "^9.2.3"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",

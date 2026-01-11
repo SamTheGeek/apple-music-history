@@ -3,8 +3,7 @@ import { Button } from 'reactstrap';
 import Computation from "./Computation";
 import numeral from 'numeral';
 
-import CalendarHeatmap from 'react-calendar-heatmap';
-import 'react-calendar-heatmap/dist/styles.css';
+import CalendarHeatmap from './CalendarHeatmap';
 import { Tooltip } from 'react-tooltip';
 import HourHeatmap from './HourHeatmap';
 
