@@ -1,7 +1,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/8b888380-b867-4870-91c8-04ebdf823036/deploy-status)](https://app.netlify.com/sites/awesome-agnesi-2f5b8f/deploys)
 
 > **Warning**
-> With the release of Apple's native tool for music history, I've decided to retire the tool as it is stuck in dependency hell. Feel free to fork and bring it up to date if you wish, but don't expect it to work with any Apple data exports after 2022-01-01.
+> With the release of Apple's native tool for music history, I've decided to retire the tool as it is stuck in dependency hell. Feel free to fork and bring it up to date if you wish, but don't expect it to work with any Apple data exports after 2022-01-01. It's unarchived to play with the revival of old node projects using AI coding tools, nothing more.
 
 # [Apple Music History](https://music.samthegeek.net)
 
