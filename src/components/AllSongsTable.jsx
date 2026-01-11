@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import numeral from 'numeral';
 import DataTable from 'react-data-table-component';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 
 const AllSongsTable = ({ addExcluded, songs = [] }) => {
     const [nameFilter, setNameFilter] = useState('');
