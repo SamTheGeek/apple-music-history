@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Jumbotron } from 'reactstrap';
-import Papa from 'papaparse';
+import CsvParse from '@vtex/react-csv-parse';
 
 const keys = [
     "Apple ID Number",
@@ -48,69 +48,9 @@ class Banner extends Component {
     constructor(props) {
         super(props);
         this.state = { loading: false };
-        this.handleDataUploaded = this.handleDataUploaded.bind(this);
-        this.handleParseError = this.handleParseError.bind(this);
-        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
 
-
-    handleDataUploaded(data) {
-        var filterDate = document.getElementById("filterDate").value;
-
-        if (filterDate.length > 1) {
-            var tempArray = [];
-            for(var i = 0; i < data.length; i++) {
-                if (data[i]["Event End Timestamp"] >= filterDate + "T00:00:00" || data[i]["Event Start Timestamp"] >= filterDate + "T00:00:00") {
-                    tempArray.push(data[i]);
-                }
-            }
-            this.props.dataResponseHandler(tempArray);
-        } else {
-            this.props.dataResponseHandler(data);
-        }
-    }
-
-    handleParseError(err) {
-        const reason = err && (err.reason || err.message) ? (err.reason || err.message) : 'Unknown error';
-        alert('Error Occured\n\n' + reason + '\n\n Please contact @samthegeek on twitter for more help.');
-    }
-
-    handleFileChange(event) {
-        const file = event.target.files && event.target.files[0];
-        if (!file) {
-            return;
-        }
-
-        Papa.parse(file, {
-            skipEmptyLines: true,
-            complete: results => {
-                if (results.errors && results.errors.length > 0) {
-                    this.handleParseError(results.errors[0]);
-                    return;
-                }
-
-                const dataRows = Array.isArray(results.data) ? results.data.slice() : [];
-
-                if (dataRows.length > 0) {
-                    dataRows.shift();
-                }
-
-                const normalizedData = dataRows.map(row => {
-                    const mappedRow = {};
-                    keys.forEach((key, index) => {
-                        mappedRow[key] = row[index];
-                    });
-                    return mappedRow;
-                });
-
-                this.handleDataUploaded(normalizedData);
-            },
-            error: err => {
-                this.handleParseError(err);
-            }
-        });
-    }
 
     render() {
 
@@ -121,14 +61,32 @@ class Banner extends Component {
                     <p className="lead">Open your <em>Apple Music Play Activity.csv</em> file below to generate your report.</p>
                     <hr className="my-2" />
                     <p>No data ever leaves your computer and all computation is done in the browser.</p>
-                    <div>
-                        <div style={{marginBottom: '20px'}}>
-                            <p>If you want to specify the start of the report, such as to only include 2021, input 01-01-2021 below. Otherwise, if you leave it blank it will generate the report based on all the data in the Apple Music Play Activity.csv file. </p>
-                            Choose date: <input id="filterDate" type="date" />
-                        </div>
-                        <input id="file" name="file" className="inputfile" type="file" onChange={this.handleFileChange} />
-                        <p>Loading may take a moment... be patient</p>
-                    </div>
+                    <CsvParse
+
+                        keys={keys}
+                        onDataUploaded={data => {
+                            var filterDate = document.getElementById("filterDate").value;
+
+                            if (filterDate.length > 1) {
+                                var tempArray = [];
+                                for(var i = 0; i < data.length; i++) {
+                                    if (data[i]["Event End Timestamp"] >= filterDate + "T00:00:00" || data[i]["Event Start Timestamp"] >= filterDate + "T00:00:00") {
+                                        tempArray.push(data[i]);                                        
+                                    }
+                                }
+                                this.props.dataResponseHandler(tempArray);
+                            } else {
+                                this.props.dataResponseHandler(data);
+                            }
+
+                        }}
+                        onError={err => {
+
+                            alert('Error Occured\n\n' + err.reason + '\n\n Please contact @samthegeek on twitter for more help.')
+
+                        }}
+                        render={onChange => <div><div style={{marginBottom: '20px'}}><p>If you want to specify the start of the report, such as to only include 2021, input 01-01-2021 below. Otherwise, if you leave it blank it will generate the report based on all the data in the Apple Music Play Activity.csv file. </p>Choose date: <input id="filterDate" type="date" /></div><input id="file" name="file" className="inputfile" type="file" onChange={onChange} /><p>Loading may take a moment... be patient</p></div>}
+                    />
 
                 </Jumbotron>
 

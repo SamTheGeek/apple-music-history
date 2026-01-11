@@ -6,6 +6,18 @@ import matchSorter from 'match-sorter';
 
 class AllSongsTable extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            songs: props.songs,
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ songs: nextProps.songs});
+    }
+
+
     addExcluded(row) {
         this.props.addExcluded(row)
     }
@@ -13,7 +25,7 @@ class AllSongsTable extends Component {
     render() {
 
         var table = <ReactTable
-            data={this.props.songs}
+            data={this.state.songs}
             filterable
             defaultFilterMethod={(filter, row) => String(row[filter.id]) === filter.value}
             columns={[
