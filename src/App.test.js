@@ -1,9 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+describe('App', () => {
+  it('renders the banner title on initial load', () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole('heading', { name: /apple music analyser/i })
+    ).toBeInTheDocument();
+  });
 });
