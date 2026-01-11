@@ -1,4 +1,3 @@
-import moment from 'moment';
 // import {timestamp} from 'moment-timezone';
 
 function varExists(el) { 
@@ -13,6 +12,15 @@ class Computation {
 
     static monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+    static getOffsetDayHour(date, offsetMinutes) {
+        const offsetMilliseconds = offsetMinutes * 60 * 1000;
+        const offsetDate = new Date(date.getTime() + offsetMilliseconds);
+
+        return {
+            day: offsetDate.getUTCDay(),
+            hours: offsetDate.getUTCHours()
+        };
+    }
 
 
     static convetrData(input) {
@@ -294,9 +302,9 @@ class Computation {
                             days[dayID].time = Number(days[dayID].time) + Number(play["Play Duration Milliseconds"]);
     
                             var offset = Number(play["UTC Offset In Seconds"]) / 60;
-                            var day = moment(date).utcOffset(offset);
-                            var dayint = day.day();
-                            var hoursint = day.hours();
+                            var offsetParts = Computation.getOffsetDayHour(date, offset);
+                            var dayint = offsetParts.day;
+                            var hoursint = offsetParts.hours;
                             if (varExists(dayint) && dayint < 7 && dayint > 0 && varExists(hoursint) && varExists(heatmapData[dayint][hoursint])  && varExists(Number(heatmapData[dayint][hoursint])) && !isNaN(Number(heatmapData[dayint][hoursint])) && !isNaN(Number(play["Play Duration Milliseconds"]))) {
                                 heatmapData[dayint][hoursint] = Number(heatmapData[dayint][hoursint]) + Number(play["Play Duration Milliseconds"]);
                             }
