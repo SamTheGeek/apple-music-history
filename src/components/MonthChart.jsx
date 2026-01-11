@@ -9,7 +9,8 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 } from 'chart.js';
 import Computation from "./Computation";
 
@@ -20,7 +21,8 @@ ChartJS.register(
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler
 );
 
 class MonthChart extends Component {
@@ -54,6 +56,8 @@ class MonthChart extends Component {
             }))
         };
         const options = {
+            responsive: false,
+            maintainAspectRatio: false,
             elements: {
                 line: {
                     tension: 0.3
