@@ -63,17 +63,6 @@ class YearBox extends Component {
 
 class TopYears extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            years: props.years
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({ years: nextProps.years });
-    }
-
     // background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://is4-ssl.mzstatic.com/image/thumb/Music49/v4/86/75/1c/86751c2f-2ad4-d00e-0b7f-02ba9f04b007/source/300x300bb.jpg');
 
 
@@ -81,8 +70,8 @@ class TopYears extends Component {
 
         var yearsBoxes = [];
 
-        for (let index = 0; index < this.state.years.length; index++) {
-            const year = this.state.years[index];
+        for (let index = 0; index < this.props.years.length; index++) {
+            const year = this.props.years[index];
             const div = <YearBox year={year} key={year.key} />
             yearsBoxes.push(div);
 

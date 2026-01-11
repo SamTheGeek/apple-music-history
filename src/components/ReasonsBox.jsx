@@ -10,21 +10,15 @@ class ReasonsBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            reasons: props.reasons,
             collapse: false
         };
         this.toggle = this.toggle.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ reasons: nextProps.reasons, collapse: this.state.collapse });
-    }
-
     toggle() {
         this.setState({ 
-            collapse: !this.state.collapse,
-            reasons: this.state.reasons
-         });
+            collapse: !this.state.collapse
+        });
     }
 
     render() {
@@ -48,8 +42,8 @@ class ReasonsBox extends Component {
 
         var reasonsBoxes = [];
 
-        for (let index = 0; index < this.state.reasons.length; index++) {
-            const element = this.state.reasons[index];
+        for (let index = 0; index < this.props.reasons.length; index++) {
+            const element = this.props.reasons[index];
             if (element.key !== "" && element.key !== "QUICK_PLAY" && element.key !== "NOT_APPLICABLE") {
                 var box2 = <div className="box reason" key={element.key}>
                     <h3>{reasons[element.key]}</h3>
