@@ -1,9 +1,27 @@
 
 import React, { Component } from 'react';
+import { Line } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
 import Computation from "./Computation";
 
-
-var LineChart = require("react-chartjs").Line;
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 class MonthChart extends Component {
 
@@ -21,7 +39,32 @@ class MonthChart extends Component {
 
     render() {
 
-        var linechart = <LineChart data={Computation.convetrData(this.state.months)} width="600" height="300" options={{ bezierCurve: true, bezierCurveTension: 0.3, pointDot: false }} />
+        const rawData = Computation.convetrData(this.state.months);
+        const data = {
+            ...rawData,
+            datasets: rawData.datasets.map((dataset) => ({
+                ...dataset,
+                backgroundColor: dataset.fillColor,
+                borderColor: dataset.strokeColor,
+                pointBackgroundColor: dataset.pointColor,
+                pointBorderColor: dataset.pointStrokeColor,
+                pointHoverBackgroundColor: dataset.pointHighlightFill,
+                pointHoverBorderColor: dataset.pointHighlightStroke,
+                fill: true
+            }))
+        };
+        const options = {
+            elements: {
+                line: {
+                    tension: 0.3
+                },
+                point: {
+                    radius: 0
+                }
+            }
+        };
+
+        const linechart = <Line data={data} width="600" height="300" options={options} />
 
 
         return (<div className="box linechart">
