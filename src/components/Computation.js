@@ -20,22 +20,22 @@ class Computation {
             labels: [],
             datasets: [{
                     label: "Played Hours",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "#FB7E2A",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    backgroundColor: "rgba(220,220,220,0.2)",
+                    borderColor: "#FB7E2A",
+                    pointBackgroundColor: "rgba(220,220,220,1)",
+                    pointBorderColor: "#fff",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
                     data: []
                 },
                 {
                     label: "Skipped Hours",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "#BCD2C5",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    backgroundColor: "rgba(220,220,220,0.2)",
+                    borderColor: "#BCD2C5",
+                    pointBackgroundColor: "rgba(220,220,220,1)",
+                    pointBorderColor: "#fff",
+                    pointHoverBackgroundColor: "#fff",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
                     data: []
                 }
             ]

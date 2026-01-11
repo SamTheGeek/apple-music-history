@@ -1,115 +1,117 @@
-import React, { Component } from 'react';
+import React, { useMemo, useState } from 'react';
 import numeral from 'numeral';
-import 'react-table/react-table.css';
-import ReactTable from "react-table";
+import DataTable from 'react-data-table-component';
 import matchSorter from 'match-sorter';
 
-class AllSongsTable extends Component {
+const AllSongsTable = ({ addExcluded, songs = [] }) => {
+    const [nameFilter, setNameFilter] = useState('');
+    const [artistFilter, setArtistFilter] = useState('');
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            songs: props.songs,
-        };
-    }
+    const filteredSongs = useMemo(() => {
+        let filtered = songs;
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ songs: nextProps.songs});
-    }
+        if (nameFilter) {
+            filtered = matchSorter(filtered, nameFilter, {
+                keys: [(item) => item.value.name]
+            });
+        }
 
+        if (artistFilter) {
+            filtered = matchSorter(filtered, artistFilter, {
+                keys: [(item) => item.value.artist]
+            });
+        }
 
-    addExcluded(row) {
-        this.props.addExcluded(row)
-    }
+        return filtered;
+    }, [songs, nameFilter, artistFilter]);
 
-    render() {
-
-        var table = <ReactTable
-            data={this.state.songs}
-            filterable
-            defaultFilterMethod={(filter, row) => String(row[filter.id]) === filter.value}
-            columns={[
-                {
-                    Header: "Song",
-                    columns: [
-                        {
-                            Header: "Name",
-                            id: "name",
-                            accessor: d => d.value.name,
-                            filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["name"] }),
-                            filterAll: true
-                        },
-                        {
-                            Header: "Artist",
-                            id: "artist",
-                            accessor: d => d.value.artist,
-                            filterMethod: (filter, rows) => matchSorter(rows, filter.value, { keys: ["artist"] }),
-                            filterAll: true
-                        }
-                    ]
-                },
-                {
-                    Header: "Info",
-                    columns: [
-                        {
-                            Header: "Plays",
-                            id: "plays",
-                            accessor: d => d.value.plays,
-                            filterable: false
-                        },
-                        {
-                            Header: "Listened Time",
-                            id: "time",
-                            accessor: d => d.value.time,
-                            Cell: row => (
-                                <div>{numeral(row.value / 1000).format('00:00:00')}</div>
-                            ),
-                            filterable: false
-                        },
-                        {
-                            Header: "Skipped Time",
-                            id: "missedTime",
-                            accessor: d => d.value.missedTime,
-                            Cell: row => (
-                                <div>{numeral(row.value / 1000).format('00:00:00')}</div>
-                            ),
-                            filterable: false
-                        }
-                    ]
-                },
-                {
-                    Header: "Report",
-                    columns: [
-                        {
-                            Header: "Exclude",
-                            id: "exclude",
-                            accessor: d => d.value.excluded,
-                            Cell: d => (
-                                <div><input
-                                    name="isExcluded"
-                                    type="checkbox"
-                                    checked={d.value}
-                                    onChange={e => {
-                                        this.addExcluded(d);
-                                    }} /></div>
-                            ),
-                            filterable: false
-                        }
-                    ]
-                }
-            ]
+    const columns = useMemo(
+        () => [
+            {
+                name: 'Name',
+                selector: (row) => row.value.name,
+                sortable: true,
+                wrap: true
+            },
+            {
+                name: 'Artist',
+                selector: (row) => row.value.artist,
+                sortable: true,
+                wrap: true
+            },
+            {
+                name: 'Plays',
+                selector: (row) => row.value.plays,
+                sortable: true,
+                right: true
+            },
+            {
+                name: 'Listened Time',
+                selector: (row) => row.value.time,
+                cell: (row) => <div>{numeral(row.value.time / 1000).format('00:00:00')}</div>,
+                sortable: true,
+                right: true
+            },
+            {
+                name: 'Skipped Time',
+                selector: (row) => row.value.missedTime,
+                cell: (row) => <div>{numeral(row.value.missedTime / 1000).format('00:00:00')}</div>,
+                sortable: true,
+                right: true
+            },
+            {
+                name: 'Exclude',
+                cell: (row) => (
+                    <input
+                        name="isExcluded"
+                        type="checkbox"
+                        checked={row.value.excluded}
+                        onChange={() => {
+                            addExcluded(row);
+                        }}
+                    />
+                ),
+                right: true
             }
-            defaultPageSize={100}
-            style={{
-                height: "600px" // This will force the table body to overflow and scroll, since there is not enough room
-            }}
-        />
+        ],
+        [addExcluded]
+    );
 
-
-        return (table);
-
-    }
-
-}
+    return (
+        <div className="all-songs-table">
+            <div className="table-filters">
+                <div className="filter-field">
+                    <label htmlFor="filter-name">Filter by song</label>
+                    <input
+                        id="filter-name"
+                        type="text"
+                        value={nameFilter}
+                        onChange={(event) => setNameFilter(event.target.value)}
+                        placeholder="Search song name"
+                    />
+                </div>
+                <div className="filter-field">
+                    <label htmlFor="filter-artist">Filter by artist</label>
+                    <input
+                        id="filter-artist"
+                        type="text"
+                        value={artistFilter}
+                        onChange={(event) => setArtistFilter(event.target.value)}
+                        placeholder="Search artist"
+                    />
+                </div>
+            </div>
+            <DataTable
+                columns={columns}
+                data={filteredSongs}
+                keyField="key"
+                pagination
+                paginationPerPage={100}
+                highlightOnHover
+                dense
+            />
+        </div>
+    );
+};
 
 export default AllSongsTable;
