@@ -83,7 +83,6 @@ class Banner extends Component {
         }
 
         Papa.parse(file, {
-            header: true,
             skipEmptyLines: true,
             complete: results => {
                 if (results.errors && results.errors.length > 0) {
@@ -91,10 +90,16 @@ class Banner extends Component {
                     return;
                 }
 
-                const normalizedData = results.data.map(row => {
+                const dataRows = Array.isArray(results.data) ? results.data.slice() : [];
+
+                if (dataRows.length > 0) {
+                    dataRows.shift();
+                }
+
+                const normalizedData = dataRows.map(row => {
                     const mappedRow = {};
-                    keys.forEach(key => {
-                        mappedRow[key] = row[key];
+                    keys.forEach((key, index) => {
+                        mappedRow[key] = row[index];
                     });
                     return mappedRow;
                 });
