@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -71,13 +70,13 @@ class MonthChart extends Component {
         const linechart = <Line data={data} width="600" height="300" options={options} />
 
 
-        return (<div className="box linechart">
-            <h3>Playing Time by Month</h3>
-            {linechart}
-            <p>
-                Orange line: hours playing // Green line: hours 'skipped'
-        </p>
-        </div>);
+        return (
+            <div className="box linechart">
+                <h3>Playing Time by Month</h3>
+                {linechart}
+                <p>Orange line: hours playing // Green line: hours 'skipped'</p>
+            </div>
+        );
 
     }
 
