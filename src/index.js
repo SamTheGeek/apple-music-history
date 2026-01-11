@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import * as Sentry from '@sentry/browser';
+import * as Sentry from '@sentry/react';
 
 Sentry.init({
-    dsn: "https://5a944e1a8e444067b60244235f6878bf@o4504362701291520.ingest.sentry.io/4504362703257600"
+    dsn: "https://5a944e1a8e444067b60244235f6878bf@o4504362701291520.ingest.sentry.io/4504362703257600",
+    integrations: [Sentry.browserTracingIntegration()],
+    tracesSampleRate: 1.0
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));
