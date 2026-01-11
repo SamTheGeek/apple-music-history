@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Jumbotron, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 import Computation from "./Computation";
 import numeral from 'numeral';
 
 import CalendarHeatmap from 'react-calendar-heatmap';
 import 'react-calendar-heatmap/dist/styles.css';
-import ReactTooltip from 'react-tooltip';
-import HeatMap from 'react-heatmap-grid';
+import { Tooltip } from 'react-tooltip';
+import HourHeatmap from './HourHeatmap';
 
 import ReasonsBox from './ReasonsBox';
 import TopYears from './TopYears';
@@ -195,7 +195,7 @@ class Results extends Component {
 
                 
 
-                <Jumbotron>
+                <section className="hero">
 
                     
 
@@ -232,9 +232,12 @@ class Results extends Component {
                             }}
                             tooltipDataAttrs={(value) => {
                                 if (value && value.date != null) {
-                                    return { 'data-tip': `${Computation.convertTime(value.count)} on ${value.date}` }
+                                    return {
+                                        'data-tooltip-id': 'heatmap-tooltip',
+                                        'data-tooltip-content': `${Computation.convertTime(value.count)} on ${value.date}`
+                                    }
                                 } else {
-                                    return { 'data-tip': '' }
+                                    return { 'data-tooltip-id': 'heatmap-tooltip' }
                                 }
 
                             }}
@@ -246,15 +249,14 @@ class Results extends Component {
                                 return `color-scale-${number}`;
                             }}
                         />
-                        <ReactTooltip />
+                        <Tooltip id="heatmap-tooltip" />
                         <p>There were <strong>{numeral(dayswithoutmusic).format('0,0')}</strong> out of <strong>{numeral(daysTodayCount).format('0,0')}</strong> days you didn't listen to music.</p>
                     </div>
 
                     <div>
                         <div className="box">
                             <h3>Playing Time by Hour of Day</h3>
-                            <HeatMap
-                                squares={true}
+                            <HourHeatmap
                                 xLabelsVisibility={xLabelsVisibility}
                                 xLabels={xLabels}
                                 yLabels={yLabels}
@@ -272,7 +274,7 @@ class Results extends Component {
                         <AllSongsTable addExcluded={row => this.addExcluded(row)} songs={this.state.songs} />
                     </div>
 
-                </Jumbotron>
+                </section>
 
 
             </div>
