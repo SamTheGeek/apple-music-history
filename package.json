@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "@sentry/react": "^8.34.0",
+    "@sentry/react": "^10.32.1",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "downloadjs": "^1.4.7",
@@ -16,11 +16,11 @@
     "match-sorter": "^6.3.4",
     "numeral": "^2.0.6",
     "papaparse": "^5.4.1",
-    "react": "^18.3.1",
+    "react": "^19.2.3",
     "react-calendar-heatmap": "^1.9.1",
     "react-chartjs-2": "^5.2.0",
     "react-data-table-component": "^7.6.2",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.3",
     "react-tooltip": "^5.28.0",
     "reactstrap": "^9.2.2"
   },
