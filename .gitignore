@@ -8,6 +8,14 @@
 /build
 /dist
 
+# App icons (generated from assets/icons/app-icon.svg by scripts/rasterize-app-icons.mjs)
+/public/favicon.svg
+/public/favicon.ico
+/public/favicon-*.png
+/public/android-icon-*.png
+/public/apple-icon*.png
+/public/ms-icon-*.png
+
 # local Apple exports (never commit); keep README
 /test-data/*
 !/test-data/README.md

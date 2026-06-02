@@ -6,14 +6,15 @@ Use this rule when changing build config, scripts, CI, deployment, or editor-fac
 
 - **Node.js:** 24+ (`engines` in `package.json`, `.nvmrc`). Not Create React App — this is a **Vite 8** SPA with **React 19**.
 - **Bundler / dev:** Vite (`vite.config.js`). **Vitest 4** for unit tests (`vite.config.js` `test` block).
+- **App icons:** Source vector [`assets/icons/app-icon.svg`](../assets/icons/app-icon.svg). **`scripts/rasterize-app-icons.mjs`** rasterizes to `public/` via **`predev` / `prestart` / `prebuild`** in `package.json`. Raster outputs are gitignored; use **`npm run build`** (not `vite build` alone) in CI so icons exist before Vite copies `public/` → `dist/`.
 
 ## npm scripts (from repo root)
 
 | Script | Purpose |
 |--------|---------|
-| `npm run dev` | Vite dev server with `--host` (LAN-friendly). |
-| `npm start` | Vite dev server, localhost only. |
-| `npm run build` | Production bundle → `dist/`. |
+| `npm run dev` | Runs `scripts/rasterize-app-icons.mjs` then Vite dev server with `--host` (LAN-friendly). |
+| `npm start` | Runs icon raster script then Vite dev server, localhost only. |
+| `npm run build` | Runs icon raster script then production bundle → `dist/`. |
 | `npm run preview` | Serve `dist/` locally after a build. |
 | `npm test` | `vitest run` (CI-style). |
 | `npm run test:watch` | Vitest watch mode. |

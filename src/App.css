@@ -846,7 +846,7 @@
   max-width: 42rem;
 }
 
-.upload-controls label {
+.upload-controls__date-label {
   display: block;
   margin-top: var(--space-3);
   font-weight: 600;
@@ -867,9 +867,6 @@
 }
 
 .resolve-artists-option {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
   margin-top: var(--space-4);
   max-width: 42rem;
   padding: var(--space-3);
@@ -878,11 +875,35 @@
   border: 1px solid rgba(13, 148, 136, 0.2);
 }
 
-.resolve-artists-option label {
+.resolve-artists-option__label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin: 0;
   font-weight: 400;
   font-size: var(--text-sm);
-  margin-top: 0;
+  line-height: var(--leading-normal);
   color: var(--color-ink-muted);
+  cursor: pointer;
+}
+
+.resolve-artists-option__label input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.2em 0 0;
+  accent-color: var(--color-teal);
+  cursor: pointer;
+}
+
+.resolve-artists-option__label:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.resolve-artists-option__text {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .file-input-wrap {

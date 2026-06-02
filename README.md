@@ -75,6 +75,8 @@ npm run build         # production bundle → dist/
 npm run preview       # after build: serve dist/ locally (default http://localhost:4173)
 ```
 
+**App icons:** PNG and ICO files under `public/` are **generated** from the vector master [`assets/icons/app-icon.svg`](assets/icons/app-icon.svg) when you run **`npm run dev`**, **`npm start`**, or **`npm run build`** (via `predev` / `prestart` / `prebuild`). Use **`npm run build`** for production (not `vite build` alone), so Netlify and other CI get the same step. The master uses a **1024×1024** viewBox with an **inset rounded card** (opaque ink) and **transparent** pixels only in the square corners outside that shape.
+
 Deploy the contents of **`dist/`** (for example Netlify builds from this repo and publishes `dist/`).
 
 ### Deploying to Netlify
