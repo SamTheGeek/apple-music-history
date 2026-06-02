@@ -1,6 +1,7 @@
 // import {timestamp} from 'moment-timezone';
 
 import { UNKNOWN_ARTIST } from '../data/normalizePlayRow.js';
+import { getCssColorVar } from '../lib/chartTheme.js';
 
 function varExists(el) { 
     if (el !== null && typeof el !== "undefined" ) { 
@@ -38,26 +39,35 @@ class Computation {
 
 
     static convetrData(input) {
+        const fillPlay = getCssColorVar('--chart-fill-play', 'rgba(251, 126, 42, 0.18)');
+        const fillSkip = getCssColorVar('--chart-fill-skip', 'rgba(109, 185, 154, 0.18)');
+        const linePlay = getCssColorVar('--chart-line-play', '#fb7e2a');
+        const lineSkip = getCssColorVar('--chart-line-skip', '#6db99a');
+        const pointBg = getCssColorVar('--chart-point-bg', 'rgba(255, 255, 255, 0.95)');
+        const pointBorder = getCssColorVar('--chart-point-border', '#ffffff');
+        const pointHoverBg = getCssColorVar('--chart-point-hover-bg', '#ffffff');
+        const pointHoverBorder = getCssColorVar('--chart-point-hover-border', 'rgba(255, 255, 255, 0.85)');
+
         var data = {
             labels: [],
             datasets: [{
                     label: "Played Hours",
-                    backgroundColor: "rgba(220,220,220,0.2)",
-                    borderColor: "#FB7E2A",
-                    pointBackgroundColor: "rgba(220,220,220,1)",
-                    pointBorderColor: "#fff",
-                    pointHoverBackgroundColor: "#fff",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    backgroundColor: fillPlay,
+                    borderColor: linePlay,
+                    pointBackgroundColor: pointBg,
+                    pointBorderColor: pointBorder,
+                    pointHoverBackgroundColor: pointHoverBg,
+                    pointHoverBorderColor: pointHoverBorder,
                     data: []
                 },
                 {
                     label: "Skipped Hours",
-                    backgroundColor: "rgba(220,220,220,0.2)",
-                    borderColor: "#BCD2C5",
-                    pointBackgroundColor: "rgba(220,220,220,1)",
-                    pointBorderColor: "#fff",
-                    pointHoverBackgroundColor: "#fff",
-                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    backgroundColor: fillSkip,
+                    borderColor: lineSkip,
+                    pointBackgroundColor: pointBg,
+                    pointBorderColor: pointBorder,
+                    pointHoverBackgroundColor: pointHoverBg,
+                    pointHoverBorderColor: pointHoverBorder,
                     data: []
                 }
             ]

@@ -27,8 +27,20 @@ class MonthChart extends Component {
 
     constructor(props) {
         super(props);
+        this._colorSchemeMql =
+            typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+                ? window.matchMedia('(prefers-color-scheme: dark)')
+                : null;
+        this._onColorSchemeChange = () => this.forceUpdate();
     }
 
+    componentDidMount() {
+        this._colorSchemeMql?.addEventListener('change', this._onColorSchemeChange);
+    }
+
+    componentWillUnmount() {
+        this._colorSchemeMql?.removeEventListener('change', this._onColorSchemeChange);
+    }
 
     render() {
 

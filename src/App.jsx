@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -11,6 +11,25 @@ const Results = lazy(() => import('./components/Results'));
 function App() {
   const [data, setData] = useState([]);
   const [loadError, setLoadError] = useState(null);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') {
+      document.documentElement.setAttribute('data-bs-theme', 'light');
+      return;
+    }
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = () => {
+      const dark = mq.matches;
+      document.documentElement.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) {
+        meta.setAttribute('content', dark ? '#16141a' : '#ebe8e3');
+      }
+    };
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
 
   let appToLoad;
 

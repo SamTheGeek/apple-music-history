@@ -15,6 +15,12 @@ import TotalsBoxes from './TotalsBoxes';
 import AllSongsTable from './AllSongsTable';
 import TopSongBox from './TopSongBox';
 import Wrapped from './Wrapped';
+import {
+  buildArtistsCsv,
+  buildSongsCsv,
+  buildTopStatsJson,
+  triggerDownload,
+} from '../lib/exportTopStats.js';
 
 class Results extends Component {
   constructor(props) {
@@ -78,6 +84,31 @@ class Results extends Component {
 
   clearExcluded() {
     this.runComputation(this.state.data, []);
+  }
+
+  downloadExportJson() {
+    const json = JSON.stringify(
+      buildTopStatsJson({
+        filteredSongs: this.state.filteredSongs,
+        artists: this.state.artists,
+        totals: this.state.totals,
+        thisYear: this.state.thisYear,
+        excludedSongs: this.state.excludedSongs,
+      }),
+      null,
+      2,
+    );
+    triggerDownload('apple-music-top-stats.json', json, 'application/json;charset=utf-8');
+  }
+
+  downloadSongsCsv() {
+    const csv = buildSongsCsv(this.state.filteredSongs);
+    triggerDownload('apple-music-top-songs.csv', csv, 'text/csv;charset=utf-8');
+  }
+
+  downloadArtistsCsv() {
+    const csv = buildArtistsCsv(this.state.artists);
+    triggerDownload('apple-music-top-artists.csv', csv, 'text/csv;charset=utf-8');
   }
 
   render() {
@@ -199,6 +230,22 @@ class Results extends Component {
     return (
       <div>
         <section className="hero hero--dashboard">
+          <div className="results-export-bar d-flex flex-wrap gap-2 align-items-center justify-content-between mb-3">
+            <p className="small text-body-secondary mb-0">
+              Export computed stats (JSON or CSV). Everything stays in your browser — nothing is uploaded.
+            </p>
+            <div className="btn-group" role="group" aria-label="Export top stats">
+              <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => this.downloadExportJson()}>
+                JSON
+              </button>
+              <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => this.downloadSongsCsv()}>
+                Songs CSV
+              </button>
+              <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => this.downloadArtistsCsv()}>
+                Artists CSV
+              </button>
+            </div>
+          </div>
           {topSongBox}
           <TopYears years={this.state.years} />
           <TotalsBoxes
