@@ -4,7 +4,7 @@
 
 A client-side React app that analyzes your Apple Music listening history from Apple's privacy export. **Your data never leaves your browser** — parsing and stats run locally.
 
-**Stack:** Node.js 24, **Vite 7**, **React 19**, Bootstrap 5, Chart.js, Vitest. Originally by Pat Murray; maintained by [Sam Gross](https://samthegeek.net).
+**Stack:** Node.js 24, **Vite 8**, **React 19**, Bootstrap 5, Chart.js, Vitest. Originally by Pat Murray; maintained by [Sam Gross](https://samthegeek.net).
 
 ## Download your data
 
@@ -40,6 +40,8 @@ All guides live under **[docs/](docs/)** (start at [docs/README.md](docs/README.
 
 Requires **Node.js 24** (Active LTS). See `.nvmrc`.
 
+**Local dev:** `npm run dev` starts Vite with [`--host`](https://vite.dev/config/server-options.html#server-host) so you can open the app from other devices on your LAN. Use `npm start` for the same dev server bound only to localhost (no LAN). Stop the server with **Ctrl+C** in the terminal.
+
 ### Using NVM
 
 ```bash
@@ -48,7 +50,7 @@ nvm install    # reads .nvmrc → installs Node 24 if needed
 nvm use        # switches your shell to Node 24
 node -v        # should print v24.x.x
 npm install
-npm start
+npm run dev
 ```
 
 If `nvm use` says the version is not installed, run `nvm install 24` once, then `nvm use` again. Add a [shell hook](https://github.com/nvm-sh/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file) to auto-switch when you `cd` into this repo.
@@ -58,15 +60,17 @@ git clone https://github.com/SamTheGeek/apple-music-history.git
 cd apple-music-history
 nvm use
 npm install
-npm start
+npm run dev
 ```
 
-**Dev server:** [http://localhost:5173](http://localhost:5173) (`npm start` runs Vite.)
+### Local testing
+
+The dev server listens on **[http://localhost:5173](http://localhost:5173)** by default (Vite’s default port). With `npm run dev`, Vite also prints a **Network** URL you can use from phones or other machines on the same Wi‑Fi. Press **Ctrl+C** in the terminal to stop the dev server.
 
 ```bash
-npm test          # Vitest unit tests
-npm run build     # production bundle → dist/
-npm run preview   # serve dist/ locally
+npm test              # Vitest unit tests
+npm run build         # production bundle → dist/
+npm run preview       # after build: serve dist/ locally (default http://localhost:4173)
 ```
 
 Deploy the contents of **`dist/`** (for example Netlify builds from this repo and publishes `dist/`).
