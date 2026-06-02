@@ -75,6 +75,15 @@ npm run preview       # after build: serve dist/ locally (default http://localho
 
 Deploy the contents of **`dist/`** (for example Netlify builds from this repo and publishes `dist/`).
 
+### Deploying to Netlify
+
+1. In the [Netlify dashboard](https://app.netlify.com), open your **Site** for this repo.
+2. Go to **Site configuration** → **Environment variables** (or **Build & deploy** → **Environment**).
+3. Add **`VITE_SENTRY_DSN`** with your Sentry project’s **browser DSN** as the value. Scope it to **Production** and, if you use them, **Branch deploy** previews where you want error reporting.
+4. **Deploy** → **Trigger deploy** → **Clear cache and deploy site** (or push a commit) so Netlify runs a fresh `npm run build`. Vite replaces `import.meta.env.VITE_*` at **build time**; changing env vars without rebuilding leaves the old bundle unchanged.
+
+See also [.env.example](.env.example) for local copies of the same variables.
+
 ### Local export testing
 
 Put your privacy export ZIP parts under `test-data/apple-media-services/` (recommended; that path is gitignored), or directly under `test-data/` if you prefer. Then:

@@ -4,9 +4,12 @@ import './index.css';
 import App from './App';
 import * as Sentry from '@sentry/react';
 
-const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
-if (sentryDsn) {
-  Sentry.init({ dsn: sentryDsn });
+if (import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    environment: import.meta.env.MODE,
+    tracesSampleRate: 0.1,
+  });
 }
 
 const root = createRoot(document.getElementById('root'));
