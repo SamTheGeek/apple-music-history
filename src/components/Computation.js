@@ -466,9 +466,6 @@ class Computation {
 
 
         callback(returnVal);
-        console.log(returnVal);
-
-        // return 
     }
 }
 

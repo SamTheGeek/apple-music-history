@@ -1,86 +1,59 @@
-
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import numeral from 'numeral';
-import Computation from "./Computation";
-import jsonp from 'jsonp';
+import Computation from './Computation';
+import { fetchItunesArtworkUrl } from '../lib/itunesArtwork.js';
 
+function YearBox({ year }) {
+  const [imageURL, setImageURL] = useState('');
 
-class YearBox extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            imageURL: ""
-        };
+  useEffect(() => {
+    let cancelled = false;
+    const top = year.value[0]?.value;
+    if (!top) {
+      return undefined;
     }
 
-    componentDidMount() {
-        const year = this.props.year;
-        setTimeout(() => {
-            var url = "https://itunes.apple.com/search?term=" + year.value[0].value.name + " " + year.value[0].value.artist + "&country=US&media=music&entity=musicTrack"
-            jsonp(url, null, (err, data) => {
-                if (err) {
-                    console.error(err.message);
-                } else {
+    fetchItunesArtworkUrl(top.name, top.artist).then((url) => {
+      if (!cancelled && url) {
+        setImageURL(url);
+      }
+    });
 
-                    if (data.results.length > 0) {
-                        this.setState({
-                            imageURL: data.results[0].artworkUrl30.replace('30x30bb', '300x300bb')
-                        });
-                    }
+    return () => {
+      cancelled = true;
+    };
+  }, [year]);
 
-                }
-            });
-        }, 0);
-    }
+  const style = imageURL
+    ? {
+        backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6)), url('${imageURL}')`,
+      }
+    : {};
 
-    render() {
-
-
-        var style = {}
-        if (this.state.imageURL.length > 0) {
-            var grad = "linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6)), url('"+ this.state.imageURL +"')";
-            style = {backgroundImage: grad}
-        }
-
-        const year = this.props.year;
-        const div = <div className="box year" style={style}>
-            <div>
-                <h4>{year.key}</h4>
-                <h2>{year.value[0].value.name}</h2>
-                <h4>{year.value[0].value.artist}</h4>
-            </div>
-            <div>
-                <hr className="my-2" />
-                <p className="lead">{numeral(year.value[0].value.plays).format('0,0')} Plays</p>
-                <p>{Computation.convertTime(year.value[0].value.time)}</p>
-            </div>
-        </div>
-        return div;
-    }
-
+  return (
+    <div className="box year" style={style}>
+      <div>
+        <h4>{year.key}</h4>
+        <h2>{year.value[0].value.name}</h2>
+        <h4>{year.value[0].value.artist}</h4>
+      </div>
+      <div>
+        <hr className="my-2" />
+        <p className="lead">{numeral(year.value[0].value.plays).format('0,0')} Plays</p>
+        <p>{Computation.convertTime(year.value[0].value.time)}</p>
+      </div>
+    </div>
+  );
 }
 
-
-class TopYears extends Component {
-
-    // background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://is4-ssl.mzstatic.com/image/thumb/Music49/v4/86/75/1c/86751c2f-2ad4-d00e-0b7f-02ba9f04b007/source/300x300bb.jpg');
-
-
-    render() {
-
-        var yearsBoxes = [];
-
-        for (let index = 0; index < this.props.years.length; index++) {
-            const year = this.props.years[index];
-            const div = <YearBox year={year} key={year.key} />
-            yearsBoxes.push(div);
-
-        }
-
-        return (<div className="years">{yearsBoxes}</div>);
-
-    }
-
+function TopYears({ years }) {
+  return (
+    <div className="years">
+      {years.map((year) => (
+        <YearBox year={year} key={year.key} />
+      ))}
+    </div>
+  );
 }
 
 export default TopYears;

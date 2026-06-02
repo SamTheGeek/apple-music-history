@@ -1,66 +1,47 @@
-import React, { Component } from 'react';
-import Computation from "./Computation";
+import React from 'react';
+import Computation from './Computation';
 import numeral from 'numeral';
 
-
-class TotalsBoxes extends Component {
-
-    render() {
-
-        var totalsBox = <div className="box year" key="totals">
-            <div>
-                <p className="lead">You've listened to</p>
-                <h2>{Computation.convertTime(this.props.totals.totalTime)}</h2>
-                <p className="lead">of music, or {(Math.round((this.props.totals.totalTime / 1000) / 60)).toLocaleString()} minutes.</p>
-            </div>
-            <div>
-                <h2>{numeral(this.props.totals.totalPlays).format('0,0')}</h2>
-                <p className="lead">plays</p>
-            </div>
+function TotalsBoxes({ totals, songs, artists, day }) {
+  return (
+    <div className="years">
+      <div className="box year" key="totals">
+        <div>
+          <p className="lead">You&apos;ve listened to</p>
+          <h2>{Computation.convertTime(totals.totalTime)}</h2>
+          <p className="lead">
+            of music, or {Math.round(totals.totalTime / 1000 / 60).toLocaleString()} minutes.
+          </p>
         </div>
-
-        var highestDay = <div className="box year" key="highestDay">
-            <div>
-                <p className="lead">On</p>
-                <h3>{this.props.day.key}</h3>
-                <p className="lead">you listened to</p>
-                <h3>{Computation.convertTime(this.props.day.value.time)}</h3>
-                <p className="lead">of music</p>
-            </div>
-            <div>
-
-            </div>
+        <div>
+          <h2>{numeral(totals.totalPlays).format('0,0')}</h2>
+          <p className="lead">plays</p>
         </div>
+      </div>
 
-        var totalSongs = <div className="box year" key="totalSongs">
-            <div>
-                <h2>{numeral(this.props.songs).format('0,0')}</h2>
-                <p className="lead">songs</p>
-            </div>
-            <div>
-                <hr className="my-2" />
-                <h2>{numeral(this.props.artists).format('0,0')}</h2>
-                <p className="lead">artists</p>
-            </div>
-            <div>
-                <hr className="my-2" />
-                <h2>{numeral(this.props.totals.totalLyrics).format('0,0')}</h2>
-                <p className="lead">times viewed lyrics</p>
-            </div>
+      <div className="box year" key="highestDay">
+        <div>
+          <p className="lead">On</p>
+          <h3>{day.key}</h3>
+          <p className="lead">you listened to</p>
+          <h3>{Computation.convertTime(day.value.time)}</h3>
+          <p className="lead">of music</p>
         </div>
+      </div>
 
-        var div = <div className="years">
-            {totalsBox}
-            {highestDay}
-            {totalSongs}
+      <div className="box year" key="totalSongs">
+        <div>
+          <h2>{numeral(songs).format('0,0')}</h2>
+          <p className="lead">songs</p>
         </div>
-
-
-
-        return (div);
-
-    }
-
+        <div>
+          <hr className="my-2" />
+          <h2>{numeral(artists).format('0,0')}</h2>
+          <p className="lead">artists</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default TotalsBoxes;

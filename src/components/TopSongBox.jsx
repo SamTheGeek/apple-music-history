@@ -1,67 +1,48 @@
-import React, { Component } from 'react';
-import jsonp from 'jsonp';
-import Computation from "./Computation";
+import React, { useEffect, useState } from 'react';
+import Computation from './Computation';
+import { fetchItunesArtworkUrl } from '../lib/itunesArtwork.js';
 
+function TopSongBox({ song }) {
+  const [imageURL, setImageURL] = useState('');
 
-class TopSongBox extends Component {
+  useEffect(() => {
+    let cancelled = false;
+    const { name, artist } = song.value;
 
-    constructor() {
-        super();
-        this.state = {
-            imageURL: ""
-        }
-    }
+    fetchItunesArtworkUrl(name, artist).then((url) => {
+      if (!cancelled && url) {
+        setImageURL(url);
+      }
+    });
 
-    componentDidMount() {
+    return () => {
+      cancelled = true;
+    };
+  }, [song.value.name, song.value.artist, song.value]);
 
-        var searchTerm = this.props.song.value.name + " " + this.props.song.value.artist;
+  const style = {
+    maxWidth: 'calc(6em + 4 * 300px)',
+    backgroundRepeat: 'no-repeat',
+    backgroundPositionX: '100%',
+    backgroundSize: 'contain',
+    ...(imageURL
+      ? { backgroundImage: `url('${imageURL}')` }
+      : {}),
+  };
 
-        if (this.state.currentSearch !== searchTerm) {
-
-            setTimeout(() => {
-                var url = "https://itunes.apple.com/search?term=" + this.props.song.value.name + " " + this.props.song.value.artist + "&country=US&media=music&entity=musicTrack"
-                jsonp(url, null, (err, data) => {
-                    if (err) {
-                        console.error(err.message);
-                    } else {
-    
-                        if (data.results.length > 0) {
-                            this.setState({
-                                imageURL: data.results[0].artworkUrl30.replace('30x30bb', '300x300bb')
-                            })
-                        }
-    
-                        
-                    }
-                });
-            }, 0);
-        }
-
-        
-    }
-
-   
-
-
-    render() {
-
-        var topSong = this.props.song;
-
-        var style = { maxWidth: "calc(6em + 4 * 300px)", backgroundRepeat: 'no-repeat', backgroundPositionX: '100%', backgroundSize: 'contain' }
-
-        if (this.state.imageURL.length > 0) {
-            var imageURL = "url('"+this.state.imageURL+"')";
-            style = { maxWidth: "calc(6em + 4 * 300px)", backgroundRepeat: 'no-repeat', backgroundPositionX: '100%', backgroundSize: 'contain', backgroundImage: imageURL };
-        }
-
-        var div = <div className="box" style={style}>
-            <h3>Your most played song on Apple Music is</h3>
-            <h1 className="display-3"><p>{topSong.key}</p></h1>
-            <p className="lead">You've played this <strong>{topSong.value.plays}</strong> times for a total of <strong>{Computation.convertTime(topSong.value.time)}</strong>, skipping {Computation.convertTime(topSong.value.missedTime)}</p>
-        </div>
-
-        return div;
-    }
+  return (
+    <div className="box top-song-box" style={style}>
+      <h3>Your most played song on Apple Music is</h3>
+      <h1 className="display-3">
+        <p>{song.key}</p>
+      </h1>
+      <p className="lead">
+        You&apos;ve played this <strong>{song.value.plays}</strong> times for a total of{' '}
+        <strong>{Computation.convertTime(song.value.time)}</strong>, skipping{' '}
+        {Computation.convertTime(song.value.missedTime)}
+      </p>
+    </div>
+  );
 }
 
 export default TopSongBox;

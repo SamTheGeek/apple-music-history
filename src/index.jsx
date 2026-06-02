@@ -4,9 +4,13 @@ import './index.css';
 import App from './App';
 import * as Sentry from '@sentry/react';
 
-Sentry.init({
-    dsn: "https://5a944e1a8e444067b60244235f6878bf@o4504362701291520.ingest.sentry.io/4504362703257600"
-});
+if (import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    environment: import.meta.env.MODE,
+    tracesSampleRate: 0.1,
+  });
+}
 
 const root = createRoot(document.getElementById('root'));
 root.render(<App />);

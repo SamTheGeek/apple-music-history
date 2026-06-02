@@ -1,37 +1,39 @@
 {
   "name": "apple-music-history",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "dependencies": {
-    "@sentry/react": "^10.32.1",
-    "bootstrap": "^5.3.3",
-    "chart.js": "^4.4.3",
-    "downloadjs": "^1.4.7",
+    "@sentry/react": "^10.55.0",
+    "bootstrap": "^5.3.8",
+    "chart.js": "^4.5.1",
+    "fflate": "^0.8.3",
     "html2canvas": "^1.4.1",
-    "jsonp": "^0.2.1",
-    "match-sorter": "^8.2.0",
+    "match-sorter": "^8.3.0",
     "numeral": "^2.0.6",
-    "papaparse": "^5.4.1",
-    "react": "^19.2.3",
-    "react-chartjs-2": "^5.2.0",
-    "react-dom": "^19.2.3",
-    "react-tooltip": "^5.28.0"
+    "papaparse": "^5.5.3",
+    "react": "^19.2.7",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.7",
+    "react-tooltip": "^6.0.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.1.2",
-    "vite": "^7.3.1"
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/coverage-v8": "^4.1.8",
+    "jsdom": "^29.1.1",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "scripts": {
+    "dev": "vite --host",
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "browserslist": [
     ">0.2%",
