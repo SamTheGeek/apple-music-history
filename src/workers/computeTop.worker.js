@@ -1,12 +1,12 @@
 import Computation from '../components/Computation.js';
 
 self.onmessage = (event) => {
-  const { data, excludedSongs, requestId } = event.data;
+  const { playActivityRows, dailyTrackRows, excludedSongs, requestId } = event.data;
 
   try {
-    Computation.calculateTop(data, excludedSongs ?? [], (results) => {
+    Computation.calculateTop(playActivityRows ?? [], excludedSongs ?? [], (results) => {
       self.postMessage({ type: 'complete', requestId, results });
-    });
+    }, { dailyTrackRows: dailyTrackRows ?? null });
   } catch (err) {
     self.postMessage({
       type: 'error',

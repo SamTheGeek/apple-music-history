@@ -2,6 +2,8 @@
 
 Based on the January 2026 **Apple Media Services** privacy export (~57k rows, **143 columns**). Legacy exports also included a dedicated **`Artist Name`** column; this one does not.
 
+**Related file:** **`Apple Music - Play History Daily Tracks.csv`** (same export folder) includes **`Track Description`** (artist/title text) and **`Play Count`**; the app uses it for headline play totals when you upload the full ZIP. See [apple-export-format.md](apple-export-format.md).
+
 ## Where is the artist?
 
 | Field | Role | Useful for track artist? |

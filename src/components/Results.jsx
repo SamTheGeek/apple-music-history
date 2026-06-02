@@ -34,7 +34,14 @@ class Results extends Component {
   async runComputation(data, excludedSongs) {
     this.setState({ computeStatus: 'Computing your stats…', computeError: null, songs: null });
     try {
-      const results = await computeTopAsync(data, excludedSongs);
+      const payload =
+        data && typeof data === 'object' && !Array.isArray(data) && data.playActivityRows
+          ? {
+              playActivityRows: data.playActivityRows,
+              dailyTrackRows: data.dailyTrackRows ?? null,
+            }
+          : { playActivityRows: Array.isArray(data) ? data : [], dailyTrackRows: null };
+      const results = await computeTopAsync(payload, excludedSongs);
       this.setState({
         songs: results.songs,
         days: results.days,

@@ -15,15 +15,31 @@ function getWorker() {
 const SMALL_DATASET_THRESHOLD = 25_000;
 
 /**
+ * Normalize legacy array input vs { playActivityRows, dailyTrackRows }.
+ * @param {Record<string, string>[] | { playActivityRows: Record<string, string>[], dailyTrackRows?: Record<string, string>[] | null }} input
+ */
+function normalizeComputePayload(input) {
+  if (Array.isArray(input)) {
+    return { playActivityRows: input, dailyTrackRows: null };
+  }
+  return {
+    playActivityRows: input.playActivityRows ?? [],
+    dailyTrackRows: input.dailyTrackRows ?? null,
+  };
+}
+
+/**
  * Run calculateTop off the main thread for large datasets.
- * @param {Record<string, string>[]} data
+ * @param {Record<string, string>[] | { playActivityRows: Record<string, string>[], dailyTrackRows?: Record<string, string>[] | null }} input
  * @param {string[]} excludedSongs
  * @returns {Promise<import('../components/Computation.js').default extends never ? never : object>}
  */
-export function computeTopAsync(data, excludedSongs = []) {
-  if (data.length < SMALL_DATASET_THRESHOLD) {
+export function computeTopAsync(input, excludedSongs = []) {
+  const { playActivityRows, dailyTrackRows } = normalizeComputePayload(input);
+
+  if (playActivityRows.length < SMALL_DATASET_THRESHOLD) {
     return new Promise((resolve) => {
-      Computation.calculateTop(data, excludedSongs, resolve);
+      Computation.calculateTop(playActivityRows, excludedSongs, resolve, { dailyTrackRows });
     });
   }
 
@@ -45,6 +61,6 @@ export function computeTopAsync(data, excludedSongs = []) {
     };
 
     w.addEventListener('message', onMessage);
-    w.postMessage({ data, excludedSongs, requestId });
+    w.postMessage({ playActivityRows, dailyTrackRows, excludedSongs, requestId });
   });
 }

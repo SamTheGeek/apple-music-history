@@ -5,10 +5,10 @@
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { expandNestedZips } from '../src/data/loadExport.js';
+import { expandNestedZips, parseZipEntries } from '../src/data/loadExport.js';
 import { unzipSync } from 'fflate';
-import { isPlayActivityPath, validateHeaders, SCHEMA_VERSION } from '../src/data/schema/playActivity.js';
-import { parsePlayActivityCsv } from '../src/data/loadExport.js';
+import { SCHEMA_VERSION } from '../src/data/schema/playActivity.js';
+import { DAILY_TRACKS_SCHEMA_VERSION } from '../src/data/schema/playHistoryDailyTracks.js';
 import Computation from '../src/components/Computation.js';
 
 const dir = process.argv[2] ?? 'test-data';
@@ -30,7 +30,8 @@ if (zips.length === 0) {
   process.exit(1);
 }
 
-console.log(`Schema ${SCHEMA_VERSION}`);
+console.log(`Play Activity schema ${SCHEMA_VERSION}`);
+console.log(`Daily Tracks schema ${DAILY_TRACKS_SCHEMA_VERSION}`);
 console.log(`ZIP parts: ${zips.length}\n`);
 
 let merged = {};
@@ -40,36 +41,40 @@ for (const z of zips) {
   merged = { ...merged, ...expandNestedZips(unzipSync(new Uint8Array(buf))) };
 }
 
-const playPath = Object.keys(merged).find((p) => isPlayActivityPath(p));
-if (!playPath) {
-  console.error('Play Activity CSV not found after expanding nested ZIPs.');
+let playActivityRows;
+let dailyTrackRows;
+let sourcePaths;
+try {
+  ({ playActivityRows, dailyTrackRows, sourcePaths } = await parseZipEntries(merged));
+} catch (e) {
+  console.error(e instanceof Error ? e.message : e);
   process.exit(1);
 }
 
-const csvText = new TextDecoder('utf-8').decode(merged[playPath]);
-const headerLine = csvText.split(/\r?\n/)[0];
-const headers = headerLine.split(',').map((h) => h.trim().replace(/^"|"$/g, ''));
-const { missing, warnings } = validateHeaders(headers);
-
-console.log(`\nPlay Activity: ${playPath}`);
-console.log(`Columns: ${headers.length}`);
-if (warnings.length) warnings.forEach((w) => console.warn(`Warning: ${w}`));
-if (missing.length) {
-  console.error(`Missing columns: ${missing.join(', ')}`);
-  process.exit(1);
+console.log(`\nPlay Activity: ${sourcePaths.playActivity}`);
+console.log(`Play Activity rows: ${playActivityRows.length.toLocaleString()}`);
+if (sourcePaths.dailyTracks) {
+  console.log(`Daily Tracks: ${sourcePaths.dailyTracks}`);
+  console.log(`Daily Tracks rows: ${(dailyTrackRows?.length ?? 0).toLocaleString()}`);
+} else {
+  console.log('Daily Tracks: (not present or invalid in export)');
 }
 
-console.log('Parsing CSV…');
-const rows = await parsePlayActivityCsv(csvText);
-console.log(`Rows: ${rows.length.toLocaleString()}`);
-console.log(`Sample artist: ${rows[0]?.['Artist Name']}`);
-
-console.log('Computing stats…');
-const results = await new Promise((resolve) => {
-  Computation.calculateTop(rows, [], resolve);
+const activityOnly = await new Promise((resolve) => {
+  Computation.calculateTop(playActivityRows, [], resolve, { dailyTrackRows: null });
 });
 
-console.log(`\nTop song: ${results.filteredSongs[0]?.key ?? '(none)'}`);
-console.log(`Total plays: ${results.totals.totalPlays.toLocaleString()}`);
-console.log(`Unique songs: ${results.songs.length.toLocaleString()}`);
+const mergedStats = await new Promise((resolve) => {
+  Computation.calculateTop(playActivityRows, [], resolve, { dailyTrackRows });
+});
+
+console.log('\n--- Compare (Play Activity only vs merged with Daily Tracks) ---');
+console.log(
+  `Total plays (activity semantics): ${activityOnly.totals.totalPlays.toLocaleString()} | merged UI totals: ${mergedStats.totals.totalPlays.toLocaleString()}`,
+);
+console.log(
+  `Total time ms (activity): ${activityOnly.totals.totalTime.toLocaleString()} | merged: ${mergedStats.totals.totalTime.toLocaleString()}`,
+);
+console.log(`Top song (merged): ${mergedStats.filteredSongs[0]?.key ?? '(none)'}`);
+console.log(`Unique songs (merged): ${mergedStats.songs.length.toLocaleString()}`);
 console.log('\nOK — export is compatible.');

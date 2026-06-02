@@ -1,12 +1,18 @@
 import Papa from 'papaparse';
 import { unzipSync } from 'fflate';
 import { isPlayActivityPath } from './schema/playActivity.js';
+import { isDailyTracksPath } from './schema/playHistoryDailyTracks.js';
 import { normalizePlayRows } from './normalizePlayRow.js';
 import { validatePlayActivityHeaders, validatePlayActivityRows } from './validateExport.js';
+import {
+  parseDailyTracksCsv,
+  validateDailyTracksRowsFromHeaders,
+  validateDailyTracksRows,
+} from './parseDailyTracksCsv.js';
 
 /**
  * @param {ArrayBuffer} buffer
- * @returns {Map<string, Uint8Array>}
+ * @returns {Record<string, Uint8Array>}
  */
 function unzipToEntries(buffer) {
   const bytes = new Uint8Array(buffer);
@@ -47,24 +53,62 @@ export function expandNestedZips(entries, depth = 0) {
 }
 
 /**
+ * Prefer canonical Apple_Media_Services → Apple Music Activity paths when multiple CSVs exist.
+ * @param {string} p
+ * @returns {number}
+ */
+export function scoreAppleMusicActivityPath(p) {
+  const lower = p.replace(/\\/g, '/').toLowerCase();
+  if (lower.includes('apple_media_services') && lower.includes('apple music activity')) {
+    return 2;
+  }
+  if (lower.includes('apple music activity')) {
+    return 1;
+  }
+  return 0;
+}
+
+/**
+ * @param {Record<string, Uint8Array>} entries
+ * @returns {string[]}
+ */
+export function findAllPlayActivityPaths(entries) {
+  const paths = Object.keys(entries).filter((p) => isPlayActivityPath(p) && !p.endsWith('/'));
+  return paths.sort((a, b) => scoreAppleMusicActivityPath(b) - scoreAppleMusicActivityPath(a));
+}
+
+/**
+ * @param {Record<string, Uint8Array>} entries
+ * @returns {{ path: string, data: Uint8Array } | null}
+ */
+export function findDailyTracksInZip(entries) {
+  const paths = Object.keys(entries).filter((p) => isDailyTracksPath(p) && !p.endsWith('/'));
+  if (paths.length === 0) {
+    return null;
+  }
+  paths.sort((a, b) => scoreAppleMusicActivityPath(b) - scoreAppleMusicActivityPath(a));
+  const path = paths[0];
+  return { path, data: entries[path] };
+}
+
+/**
+ * @param {Record<string, Uint8Array>} entries
+ * @returns {{ path: string, data: Uint8Array } | null}
+ */
+function findFirstPlayActivityInZip(entries) {
+  const paths = findAllPlayActivityPaths(entries);
+  if (paths.length === 0) {
+    return null;
+  }
+  return { path: paths[0], data: entries[paths[0]] };
+}
+
+/**
  * @param {ArrayBuffer} buffer
  * @returns {Record<string, Uint8Array>}
  */
 function unzipAndExpand(buffer) {
   return expandNestedZips(unzipToEntries(buffer));
-}
-
-/**
- * @param {Map<string, Uint8Array> | Record<string, Uint8Array>} entries
- * @returns {{ path: string, data: Uint8Array } | null}
- */
-function findPlayActivityInZip(entries) {
-  const paths = Object.keys(entries);
-  const match = paths.find((p) => isPlayActivityPath(p) && !p.endsWith('/'));
-  if (!match) {
-    return null;
-  }
-  return { path: match, data: entries[match] };
 }
 
 /**
@@ -105,9 +149,83 @@ export function parsePlayActivityCsv(csvText, onProgress) {
 }
 
 /**
+ * @param {Record<string, Uint8Array>} entries
+ * @param {string[]} paths
+ * @param {(progress: { phase: string, percent?: number }) => void} [onProgress]
+ * @returns {Promise<Record<string, string>[]>}
+ */
+async function parseMergedPlayActivityFromZip(entries, paths, onProgress) {
+  let merged = [];
+  for (let i = 0; i < paths.length; i++) {
+    const csvText = decodeUtf8(entries[paths[i]]);
+    const rows = await parsePlayActivityCsv(csvText, onProgress);
+    merged = merged.concat(rows);
+  }
+  return merged;
+}
+
+/**
+ * @param {Record<string, Uint8Array>} entries
+ * @param {(progress: { phase: string, percent?: number }) => void} [onProgress]
+ * @returns {Promise<{ playActivityRows: Record<string, string>[], dailyTrackRows: Record<string, string>[] | null, sourcePaths: { playActivity: string, dailyTracks: string | null } }>}
+ */
+export async function parseZipEntries(entries, onProgress) {
+  const paths = findAllPlayActivityPaths(entries);
+  if (paths.length === 0) {
+    throw new Error(
+      'No "Apple Music Play Activity.csv" found. Upload that file directly, or include the full Apple Media Services ZIP.',
+    );
+  }
+
+  const firstCsv = decodeUtf8(entries[paths[0]]);
+  const headerLine = firstCsv.split(/\r?\n/)[0] ?? '';
+  const headers = Papa.parse(headerLine, { header: false }).data[0] ?? [];
+  const headerValidation = validatePlayActivityHeaders(headers);
+  if (!headerValidation.ok) {
+    throw new Error(headerValidation.message);
+  }
+
+  const playActivityRows = await parseMergedPlayActivityFromZip(entries, paths, onProgress);
+  const rowValidation = validatePlayActivityRows(playActivityRows);
+  if (!rowValidation.ok) {
+    throw new Error(rowValidation.message);
+  }
+
+  let dailyTrackRows = null;
+  let dailyPath = null;
+  const dailyFound = findDailyTracksInZip(entries);
+  if (dailyFound) {
+    const dailyText = decodeUtf8(dailyFound.data);
+    const dailyHeaderLine = dailyText.split(/\r?\n/)[0] ?? '';
+    const dailyHeaders = Papa.parse(dailyHeaderLine, { header: false }).data[0] ?? [];
+    const dailyHeaderVal = validateDailyTracksRowsFromHeaders(
+      dailyHeaders.map((h) => String(h ?? '').trim()),
+    );
+    if (dailyHeaderVal.ok) {
+      dailyTrackRows = await parseDailyTracksCsv(dailyText, onProgress);
+      const dailyRowVal = validateDailyTracksRows(dailyTrackRows);
+      if (!dailyRowVal.ok) {
+        dailyTrackRows = null;
+      } else {
+        dailyPath = dailyFound.path;
+      }
+    }
+  }
+
+  return {
+    playActivityRows,
+    dailyTrackRows,
+    sourcePaths: {
+      playActivity: paths.join(' | '),
+      dailyTracks: dailyPath,
+    },
+  };
+}
+
+/**
  * @param {File} file
  * @param {(progress: { phase: string, percent?: number }) => void} [onProgress]
- * @returns {Promise<{ rows: Record<string, string>[], sourcePath: string }>}
+ * @returns {Promise<{ playActivityRows: Record<string, string>[], dailyTrackRows: Record<string, string>[] | null, sourcePaths: { playActivity: string, dailyTracks: string | null } }>}
  */
 async function loadCsvFile(file, onProgress) {
   onProgress?.({ phase: 'reading', percent: 0 });
@@ -121,19 +239,23 @@ async function loadCsvFile(file, onProgress) {
     throw new Error(headerValidation.message);
   }
 
-  const rows = await parsePlayActivityCsv(text, onProgress);
-  const rowValidation = validatePlayActivityRows(rows);
+  const playActivityRows = await parsePlayActivityCsv(text, onProgress);
+  const rowValidation = validatePlayActivityRows(playActivityRows);
   if (!rowValidation.ok) {
     throw new Error(rowValidation.message);
   }
 
-  return { rows, sourcePath: file.name };
+  return {
+    playActivityRows,
+    dailyTrackRows: null,
+    sourcePaths: { playActivity: file.name, dailyTracks: null },
+  };
 }
 
 /**
  * @param {File} file
  * @param {(progress: { phase: string, percent?: number }) => void} [onProgress]
- * @returns {Promise<{ rows: Record<string, string>[], sourcePath: string }>}
+ * @returns {Promise<{ playActivityRows: Record<string, string>[], dailyTrackRows: Record<string, string>[] | null, sourcePaths: { playActivity: string, dailyTracks: string | null } }>}
  */
 async function loadZipFile(file, onProgress) {
   onProgress?.({ phase: 'unzipping', percent: 0 });
@@ -146,36 +268,15 @@ async function loadZipFile(file, onProgress) {
   }
   onProgress?.({ phase: 'unzipping', percent: 100 });
 
-  const found = findPlayActivityInZip(entries);
-  if (!found) {
-    throw new Error(
-      `No "Apple Music Play Activity.csv" found inside "${file.name}". ` +
-        'Upload that file directly, or include the full Apple Media Services ZIP.',
-    );
-  }
-
-  const csvText = decodeUtf8(found.data);
-  const headerLine = csvText.split(/\r?\n/)[0] ?? '';
-  const headers = Papa.parse(headerLine, { header: false }).data[0] ?? [];
-  const headerValidation = validatePlayActivityHeaders(headers);
-  if (!headerValidation.ok) {
-    throw new Error(headerValidation.message);
-  }
-
-  const rows = await parsePlayActivityCsv(csvText, onProgress);
-  const rowValidation = validatePlayActivityRows(rows);
-  if (!rowValidation.ok) {
-    throw new Error(rowValidation.message);
-  }
-
-  return { rows, sourcePath: found.path };
+  const result = await parseZipEntries(entries, onProgress);
+  return result;
 }
 
 /**
  * Load one or more ZIP parts / CSV files.
  * @param {File | File[]} input
  * @param {(progress: { phase: string, percent?: number }) => void} [onProgress]
- * @returns {Promise<{ rows: Record<string, string>[], sourcePath: string }>}
+ * @returns {Promise<{ playActivityRows: Record<string, string>[], dailyTrackRows: Record<string, string>[] | null, sourcePaths: { playActivity: string, dailyTracks: string | null } }>}
  */
 export async function loadExport(input, onProgress) {
   const files = Array.isArray(input) ? input : [input];
@@ -212,20 +313,7 @@ export async function loadExport(input, onProgress) {
       Object.assign(merged, entries);
       onProgress?.({ phase: 'unzipping', percent: Math.round(((i + 1) / zipFiles.length) * 100) });
     }
-    const found = findPlayActivityInZip(merged);
-    if (!found) {
-      throw new Error(
-        'No "Apple Music Play Activity.csv" found across the uploaded ZIP parts. ' +
-          'Upload the CSV from Apple Music Activity folder directly.',
-      );
-    }
-    const csvText = decodeUtf8(found.data);
-    const rows = await parsePlayActivityCsv(csvText, onProgress);
-    const rowValidation = validatePlayActivityRows(rows);
-    if (!rowValidation.ok) {
-      throw new Error(rowValidation.message);
-    }
-    return { rows, sourcePath: found.path };
+    return parseZipEntries(merged, onProgress);
   }
 
   return loadZipFile(zipFiles[0], onProgress);
@@ -248,3 +336,5 @@ export function filterRowsByStartDate(rows, filterDate) {
       (row['Event Start Timestamp'] && row['Event Start Timestamp'] >= cutoff),
   );
 }
+
+export { filterDailyTracksByStartDate } from './parseDailyTracksCsv.js';

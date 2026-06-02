@@ -1,5 +1,9 @@
 import React, { useState, useId } from 'react';
-import { loadExport, filterRowsByStartDate } from '../data/loadExport.js';
+import {
+  loadExport,
+  filterRowsByStartDate,
+  filterDailyTracksByStartDate,
+} from '../data/loadExport.js';
 import { enrichArtists } from '../data/enrichArtists.js';
 
 function Banner({ dataResponseHandler, onError, onProgress }) {
@@ -22,7 +26,7 @@ function Banner({ dataResponseHandler, onError, onProgress }) {
     setStatusText('Reading export…');
 
     try {
-      const { rows, sourcePath } = await loadExport(files, (progress) => {
+      const { playActivityRows, dailyTrackRows, sourcePaths } = await loadExport(files, (progress) => {
         const labels = {
           reading: 'Reading file…',
           unzipping: 'Unzipping archive…',
@@ -34,10 +38,17 @@ function Banner({ dataResponseHandler, onError, onProgress }) {
         onProgress?.(progress);
       });
 
-      setStatusText(`Loaded ${sourcePath}. Preparing report…`);
+      const pathSummary = [sourcePaths.playActivity, sourcePaths.dailyTracks]
+        .filter(Boolean)
+        .join(' · ');
+      setStatusText(`Loaded ${pathSummary}. Preparing report…`);
 
       const filterDate = document.getElementById(filterDateId)?.value ?? '';
-      let filtered = filterRowsByStartDate(rows, filterDate);
+      let filtered = filterRowsByStartDate(playActivityRows, filterDate);
+      const filteredDaily =
+        dailyTrackRows && dailyTrackRows.length > 0
+          ? filterDailyTracksByStartDate(dailyTrackRows, filterDate)
+          : null;
 
       if (resolveArtists) {
         setStatusText('Resolving missing artists (iTunes Search)…');
@@ -51,8 +62,18 @@ function Banner({ dataResponseHandler, onError, onProgress }) {
         });
       }
 
-      dataResponseHandler(filtered);
-      setStatusText(`Loaded ${filtered.length.toLocaleString()} plays.`);
+      dataResponseHandler({
+        playActivityRows: filtered,
+        dailyTrackRows: filteredDaily,
+        sourcePaths,
+      });
+      const dailyNote =
+        filteredDaily && filteredDaily.length > 0
+          ? ` · ${filteredDaily.length.toLocaleString()} daily track rows (used for top plays when present)`
+          : '';
+      setStatusText(
+        `Loaded ${filtered.length.toLocaleString()} play events${dailyNote}.`,
+      );
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load export.';
       onError?.(message);
