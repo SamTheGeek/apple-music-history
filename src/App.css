@@ -747,7 +747,7 @@
 }
 
 .wrapped {
-  background-color: #e11d48;
+  background-color: var(--color-accent);
   background-image: url("/background.jpg");
   display: block;
   background-size: 50%;
@@ -756,7 +756,7 @@
   width: 700px;
   max-width: 100%;
   border-radius: var(--radius-lg);
-  color: #fff;
+  color: var(--color-on-accent);
   box-shadow: var(--shadow-lg);
 }
 
@@ -820,8 +820,8 @@
   font-family: var(--font-body);
   font-weight: 600;
   font-size: var(--text-sm);
-  color: #fff;
-  background: var(--color-ink);
+  color: var(--color-share-btn-fg);
+  background: var(--color-share-btn-bg);
   border: none;
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-5);
@@ -833,7 +833,7 @@
 }
 
 .shareButton button:hover {
-  background: #2d2a35;
+  background: var(--color-share-btn-hover);
   transform: translateY(-1px);
 }
 
@@ -914,7 +914,7 @@
   display: inline-block;
   padding: var(--space-3) var(--space-6);
   background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
-  color: #fff;
+  color: var(--color-on-accent);
   border-radius: var(--radius-md);
   cursor: pointer;
   font-weight: 600;

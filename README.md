@@ -29,6 +29,7 @@ If your export includes **`Apple Music - Play History Daily Tracks.csv`** in the
 3. Upload **Apple Music Play Activity.csv** or the **full Apple Media Services ZIP** (select all parts if Apple split the download). The ZIP may also contain **Play History Daily Tracks**; the app picks it up automatically for headline play counts when present.
 4. Optionally leave **“Resolve missing artists via iTunes Search”** enabled (default) so tracks without an artist in the CSV can be labeled from Apple’s public search API (see [docs/apple-export-format.md](docs/apple-export-format.md)).
 5. Wait for parsing and stats — large exports may take a minute.
+6. After the report appears, use **Export** (JSON / Songs CSV / Artists CSV) to download aggregated top stats. Exports are generated **only in your browser**; nothing is uploaded when you save those files. The app also follows your system **light or dark** appearance automatically.
 
 ## Documentation
 

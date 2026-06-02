@@ -95,6 +95,12 @@ The **“Resolve missing artists via iTunes Search”** checkbox in the upload b
 
 Unmatched or failed lookups stay **Unknown Artist**. Results are best-effort (search ambiguity, rate limits). See [play-activity-columns.md](play-activity-columns.md) for why the CSV often lacks a per-track artist.
 
+## Exporting computed stats (in the browser)
+
+After the report loads, the dashboard includes **JSON** and **CSV** export buttons. Files contain **aggregated** top songs and artists (and optional “this year” summaries), reflecting the same exclusions you set in the **All Songs** table. Row lists are capped (currently **500** per list) to keep downloads small.
+
+**Privacy:** Export files are built entirely in your browser from data already in memory — nothing is uploaded when you download them.
+
 ## Tests
 
 Synthetic fixtures live in [`fixtures/play-activity/`](../fixtures/play-activity/) (no real listening data). Run:

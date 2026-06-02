@@ -62,7 +62,18 @@ function Wrapped({ year }) {
         <button
           type="button"
           onClick={() => {
-            html2canvas(document.getElementById('annualwrapped')).then((canvas) => {
+            const el = document.getElementById('annualwrapped');
+            if (!el) return;
+            const bg =
+              typeof window !== 'undefined'
+                ? window.getComputedStyle(el).backgroundColor || 'rgb(225, 29, 72)'
+                : 'rgb(225, 29, 72)';
+            html2canvas(el, {
+              scale: 2,
+              backgroundColor: bg,
+              logging: false,
+              useCORS: true,
+            }).then((canvas) => {
               downloadDataUrl(canvas.toDataURL('image/png'), 'mymusic.png');
             });
           }}
