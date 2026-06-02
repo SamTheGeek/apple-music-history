@@ -2,7 +2,7 @@
 
 # [Apple Music History](https://music.samthegeek.net)
 
-A client-side React app that analyzes your Apple Music listening history from Apple's privacy export. **Your data never leaves your browser** — parsing and stats run locally.
+A client-side React app that analyzes your Apple Music listening history from Apple's privacy export. **Your export file is never uploaded to this app’s servers** — parsing and stats run in your browser. **Optional:** top-song cards may request **album artwork** from Apple’s iTunes Search API (song + artist text only for that lookup).
 
 **Stack:** Node.js 24, **Vite 8**, **React 19**, Bootstrap 5, Chart.js, Vitest. Originally by Pat Murray; maintained by [Sam Gross](https://samthegeek.net).
 
