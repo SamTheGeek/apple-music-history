@@ -6,7 +6,7 @@ import { readFile, writeFile, copyFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Resvg } from '@resvg/resvg-js';
-import toIco from 'to-ico';
+import icoEndec from 'ico-endec';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -63,7 +63,7 @@ async function main() {
 
   const icoSizes = [64, 48, 32, 16];
   const icoBuffers = icoSizes.map((w) => renderPng(svgBuffer, w));
-  const ico = await toIco(icoBuffers);
+  const ico = icoEndec.encode(icoBuffers);
   await writeFile(join(publicDir, 'favicon.ico'), ico);
 
   await copyFile(svgPath, join(publicDir, 'favicon.svg'));

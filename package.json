@@ -24,8 +24,8 @@
     "@resvg/resvg-js": "^2.6.2",
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.8",
+    "ico-endec": "^0.1.6",
     "jsdom": "^29.1.1",
-    "to-ico": "^1.1.5",
     "vite": "^8.0.16",
     "vitest": "^4.1.8"
   },
