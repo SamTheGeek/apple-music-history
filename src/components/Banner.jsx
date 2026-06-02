@@ -65,7 +65,7 @@ function Banner({ dataResponseHandler, onError, onProgress }) {
 
   return (
     <div>
-      <section className="hero" aria-busy={loading}>
+      <section className="hero hero--intro" aria-busy={loading}>
         <h1 className="display-3">Apple Music Analyser</h1>
         <p className="lead">
           Open your <em>Apple Music Play Activity.csv</em> or the full Apple Media Services{' '}

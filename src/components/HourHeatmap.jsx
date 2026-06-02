@@ -26,7 +26,7 @@ const HourHeatmap = ({ data, xLabels, xLabelsVisibility, yLabels }) => {
                         <div className="heatmap-cells">
                             {data[rowIndex].map((value, colIndex) => {
                                 const intensity = maxValue > 0 ? value / maxValue : 0;
-                                const backgroundColor = `rgba(251, 126, 42, ${0.15 + intensity * 0.85})`;
+                                const backgroundColor = `rgba(13, 148, 136, ${0.12 + intensity * 0.82})`;
                                 return (
                                     <div
                                         key={`${rowIndex}-${colIndex}`}

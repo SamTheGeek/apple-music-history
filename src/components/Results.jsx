@@ -191,7 +191,7 @@ class Results extends Component {
 
     return (
       <div>
-        <section className="hero">
+        <section className="hero hero--dashboard">
           {topSongBox}
           <TopYears years={this.state.years} />
           <TotalsBoxes
