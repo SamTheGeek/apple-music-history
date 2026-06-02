@@ -23,12 +23,14 @@ From the **repository root** (Node 24):
 
 ```bash
 node scripts/inspect-export-headers.mjs test-data/apple-media-services
+node scripts/list-export-zip-contents.mjs test-data/apple-media-services
 node scripts/verify-local-export.mjs test-data/apple-media-services
 ```
 
 Use `test-data` instead of `test-data/apple-media-services` if your ZIPs sit at the top level.
 
 - **inspect-export-headers** — walk directories, print `SCHEMA_VERSION`, validate Play Activity headers.
-- **verify-local-export** — merge ZIP parts, expand nested ZIPs, parse CSV, run `Computation` smoke stats.
+- **list-export-zip-contents** — merge ZIP parts like the app, list expanded paths, peek CSV headers (optional `--count` for row counts).
+- **verify-local-export** — merge ZIP parts, expand nested ZIPs, parse Play Activity and optional Daily Tracks, run `Computation` and print activity-only vs merged totals.
 
 See [docs/apple-export-format.md](../docs/apple-export-format.md) and the main [README](../README.md).

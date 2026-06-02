@@ -107,12 +107,14 @@ class Computation {
         return result
     }
 
+    /**
+     * Stitch pause segments without requiring Artist Name to match (enrichment can change artist mid-session).
+     */
     static isSamePlay(play, previousPlay) {
         if (previousPlay != null &&
             Computation.isPlay(previousPlay) && 
             Computation.isPlay(play) &&
             previousPlay["Song Name"] === play["Song Name"] &&
-            previousPlay["Artist Name"] === play["Artist Name"] &&
             previousPlay["End Position In Milliseconds"] === play["Start Position In Milliseconds"] &&
             previousPlay["End Reason Type"] === "PLAYBACK_MANUALLY_PAUSED") {
             return true;
@@ -126,7 +128,6 @@ class Computation {
             Computation.isPlay(nextPlay) && 
             Computation.isPlay(play) &&
             nextPlay["Song Name"] === play["Song Name"] &&
-            nextPlay["Artist Name"] === play["Artist Name"] &&
             play["End Position In Milliseconds"] === nextPlay["Start Position In Milliseconds"] &&
             play["End Reason Type"] === "PLAYBACK_MANUALLY_PAUSED") {
             return true;
@@ -143,9 +144,208 @@ class Computation {
         }
     }
 
-    
+    /**
+     * @param {Record<string, string>[]} data
+     * @returns {Record<string, string>[]}
+     */
+    static sortPlayActivityByEventEnd(data) {
+        if (!data || data.length === 0) {
+            return data;
+        }
+        return [...data].sort((a, b) => {
+            const ta = String(a["Event End Timestamp"] ?? "");
+            const tb = String(b["Event End Timestamp"] ?? "");
+            return ta.localeCompare(tb);
+        });
+    }
 
-    static calculateTop(data, excludedSongs, callback) {
+    /**
+     * @param {string} [s]
+     * @returns {number | null}
+     */
+    static yearFromDatePlayed(s) {
+        if (!s || !String(s).trim()) {
+            return null;
+        }
+        var raw = String(s).trim();
+        if (/^\d{8}$/.test(raw)) {
+            return Number(raw.slice(0, 4));
+        }
+        var t = Date.parse(raw);
+        if (!Number.isNaN(t)) {
+            return new Date(t).getFullYear();
+        }
+        if (/^\d{4}/.test(raw)) {
+            return Number(raw.slice(0, 4));
+        }
+        return null;
+    }
+
+    /**
+     * Top songs / artists / totals / yearly buckets from Play History Daily Tracks (one row ≈ one play).
+     * @param {Record<string, string>[]} dailyRows
+     * @param {string[]} excludedSongs
+     * @param {number} today
+     */
+    static aggregateDailyTrackStats(dailyRows, excludedSongs, today) {
+        var songs = {};
+        var artists = {};
+        var yearSongs = {};
+        var thisYear = {
+            totalPlays: 0,
+            totalTime: 0,
+            year: today,
+            artists: {}
+        };
+        var totals = {
+            totalPlays: 0,
+            totalTime: 0,
+            totalLyrics: 0
+        };
+
+        for (var i = 0; i < dailyRows.length; i++) {
+            var row = dailyRows[i];
+            var song = row["Song Name"] != null ? String(row["Song Name"]).trim() : "";
+            var artist = row["Artist Name"] != null && String(row["Artist Name"]).trim().length > 0
+                ? String(row["Artist Name"]).trim()
+                : "Unknown Artist";
+            var dur = Number(row["Play Duration Milliseconds"]);
+            var datePlayed = row["Date Played"] != null ? String(row["Date Played"]).trim() : "";
+            var playCountRaw = Number(row["Play Count"]);
+            var playCount = Number.isFinite(playCountRaw) && playCountRaw >= 1 ? Math.floor(playCountRaw) : 1;
+
+            if (!song || !Number.isFinite(dur) || dur <= 0) {
+                continue;
+            }
+
+            var uniqueID = "'" + song + "' by " + artist;
+            var excluded = excludedSongs.includes(uniqueID);
+
+            if (songs[uniqueID] == null) {
+                songs[uniqueID] = {
+                    plays: 0,
+                    time: 0,
+                    name: song,
+                    artist: artist,
+                    missedTime: 0,
+                    excluded: excluded
+                };
+            }
+
+            songs[uniqueID].plays = songs[uniqueID].plays + playCount;
+            songs[uniqueID].time = Number(songs[uniqueID].time) + dur;
+
+            if (!excluded) {
+                totals.totalPlays = totals.totalPlays + playCount;
+                totals.totalTime = Number(totals.totalTime) + dur;
+
+                if (artists[artist] == null) {
+                    artists[artist] = {
+                        plays: 0,
+                        time: 0,
+                        missedTime: 0
+                    };
+                }
+                artists[artist].plays = artists[artist].plays + playCount;
+                artists[artist].time = Number(artists[artist].time) + dur;
+
+                var yearID = Computation.yearFromDatePlayed(datePlayed);
+                if (yearID != null) {
+                    if (yearSongs[yearID] == null) {
+                        yearSongs[yearID] = {};
+                    }
+                    if (yearSongs[yearID][uniqueID] == null) {
+                        yearSongs[yearID][uniqueID] = {
+                            plays: 0,
+                            time: 0,
+                            name: song,
+                            artist: artist,
+                            missedTime: 0
+                        };
+                    }
+                    yearSongs[yearID][uniqueID].plays = yearSongs[yearID][uniqueID].plays + playCount;
+                    yearSongs[yearID][uniqueID].time = Number(yearSongs[yearID][uniqueID].time) + dur;
+
+                    if (today === yearID) {
+                        if (thisYear.artists[artist] == null) {
+                            thisYear.artists[artist] = {
+                                plays: 0,
+                                time: 0,
+                                missedTime: 0
+                            };
+                        }
+                        thisYear.totalPlays = thisYear.totalPlays + playCount;
+                        thisYear.totalTime = Number(thisYear.totalTime) + dur;
+                        thisYear.artists[artist].plays = thisYear.artists[artist].plays + playCount;
+                        thisYear.artists[artist].time = Number(thisYear.artists[artist].time) + dur;
+                    }
+                }
+            }
+        }
+
+        var result = Computation.convertObjectToArray(songs);
+        result = result.sort(function (a, b) {
+            return b.value.time - a.value.time;
+        });
+
+        var filteredSongs = [];
+        for (var fi = 0; fi < result.length; fi++) {
+            if (!result[fi].value.excluded) {
+                filteredSongs.push(result[fi]);
+            }
+        }
+
+        var yearresult = Computation.convertObjectToArray(yearSongs);
+        for (var yi = 0; yi < yearresult.length; yi++) {
+            yearresult[yi].value = Computation.convertObjectToArray(yearresult[yi].value);
+            yearresult[yi].value = yearresult[yi].value.sort(function (a, b) {
+                return b.value.time - a.value.time;
+            });
+        }
+
+        var thisYearArtsistsResult = Computation.convertObjectToArray(thisYear.artists);
+        thisYearArtsistsResult = thisYearArtsistsResult.sort(function (a, b) {
+            return b.value.time - a.value.time;
+        });
+
+        var thisYearSongs = yearSongs[today] != null ? Computation.convertObjectToArray(yearSongs[today]) : [];
+        thisYearSongs = thisYearSongs.sort(function (a, b) {
+            return b.value.time - a.value.time;
+        });
+
+        var thisYearResult = {
+            totalPlays: thisYear.totalPlays,
+            totalTime: thisYear.totalTime,
+            year: today,
+            artists: thisYearArtsistsResult,
+            songs: thisYearSongs
+        };
+
+        var artistsResults = Computation.convertObjectToArray(artists);
+        artistsResults = artistsResults.sort(function (a, b) {
+            return b.value.time - a.value.time;
+        });
+
+        return {
+            songs: result,
+            filteredSongs: filteredSongs,
+            years: yearresult,
+            thisYear: thisYearResult,
+            artists: artistsResults,
+            totals: totals
+        };
+    }
+
+    /**
+     * @param {Record<string, string>[]} data
+     * @param {string[]} excludedSongs
+     * @param {function(object): void} callback
+     * @param {{ dailyTrackRows?: Record<string, string>[] | null }} [options]
+     */
+    static calculateTop(data, excludedSongs, callback, options) {
+        options = options || {};
+
+        data = Computation.sortPlayActivityByEventEnd(data);
 
         let today = new Date().getFullYear();
         if (new Date().getMonth() < 5) {
@@ -421,7 +621,7 @@ class Computation {
             return b.value.time - a.value.time;
         });
 
-        var thisYearSongs = Computation.convertObjectToArray(yearSongs[today]);
+        var thisYearSongs = Computation.convertObjectToArray(yearSongs[today] || {});
         thisYearSongs = thisYearSongs.sort(function (a, b) {
             return b.value.time - a.value.time;
         });
@@ -464,8 +664,21 @@ class Computation {
             thisYear: thisYearResult
         }
 
+        var dailyRows = options.dailyTrackRows;
+        if (dailyRows != null && dailyRows.length > 0) {
+            var dailyStats = Computation.aggregateDailyTrackStats(dailyRows, excludedSongs, today);
+            returnVal.songs = dailyStats.songs;
+            returnVal.filteredSongs = dailyStats.filteredSongs;
+            returnVal.years = dailyStats.years;
+            returnVal.thisYear = dailyStats.thisYear;
+            returnVal.artists = dailyStats.artists;
+            returnVal.totals = dailyStats.totals;
+        }
 
         callback(returnVal);
+        console.log(returnVal);
+
+        // return 
     }
 }
 

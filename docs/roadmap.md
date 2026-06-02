@@ -12,13 +12,13 @@ The `database` branch prototyped an in-browser SQL panel using **alasql** and **
 
 ### Multi-CSV bundle
 
-Apple's export now includes several Apple Music files, for example:
+Apple's export includes several Apple Music files, for example:
 
-- Apple Music Play Activity.csv (supported today)
-- Apple Music - Play History Daily Tracks.csv
+- Apple Music Play Activity.csv (supported — event-level charts)
+- Apple Music - Play History Daily Tracks.csv (**supported** when inside the same ZIP — headline totals / top lists; see `loadExport.js` and `playHistoryDailyTracks.js`)
 - Apple Music - Recently Played Tracks.csv
 
-**Proposal:** Let users pick a primary source or merge complementary fields (e.g. impressions + plays).
+**Future:** Let users pick a primary source or merge complementary fields beyond the current Play Activity + Daily Tracks split.
 
 ### Artist enrichment v2
 

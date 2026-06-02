@@ -14,7 +14,13 @@ function App() {
 
   let appToLoad;
 
-  if (data.length > 0) {
+  const hasReport =
+    data &&
+    typeof data === 'object' &&
+    Array.isArray(data.playActivityRows) &&
+    data.playActivityRows.length > 0;
+
+  if (hasReport) {
     appToLoad = (
       <Suspense
         fallback={

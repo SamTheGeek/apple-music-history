@@ -14,9 +14,11 @@ A client-side React app that analyzes your Apple Music listening history from Ap
 4. Submit the request and wait for Apple's email (often 1–7 days).
 5. Download all ZIP parts when ready.
 
-Inside the archive, the file this app uses is:
+Inside the archive, the primary file this app uses is:
 
 `Apple_Media_Services/Apple Music Activity/Apple Music Play Activity.csv`
+
+If your export includes **`Apple Music - Play History Daily Tracks.csv`** in the same folder, upload the **full ZIP** (all parts): the app uses that file for **headline play totals and top songs/artists** (summing **`Play Count`** per row when present), which usually tracks **Apple Music Replay** more closely than counting Play Activity events alone. **Charts** that need precise timestamps (hour heatmap, skip reasons, month/day series) still come from **Play Activity**, so those views may not match the headline total exactly.
 
 (Exact folder names may vary slightly by export date.)
 
@@ -24,7 +26,7 @@ Inside the archive, the file this app uses is:
 
 1. Open [the live site](https://music.samthegeek.net) or run locally (see below).
 2. Optionally set a **start date** to limit the report.
-3. Upload **Apple Music Play Activity.csv** or the **full Apple Media Services ZIP** (select all parts if Apple split the download).
+3. Upload **Apple Music Play Activity.csv** or the **full Apple Media Services ZIP** (select all parts if Apple split the download). The ZIP may also contain **Play History Daily Tracks**; the app picks it up automatically for headline play counts when present.
 4. Optionally leave **“Resolve missing artists via iTunes Search”** enabled (default) so tracks without an artist in the CSV can be labeled from Apple’s public search API (see [docs/apple-export-format.md](docs/apple-export-format.md)).
 5. Wait for parsing and stats — large exports may take a minute.
 
@@ -32,7 +34,7 @@ Inside the archive, the file this app uses is:
 
 All guides live under **[docs/](docs/)** (start at [docs/README.md](docs/README.md)):
 
-- [docs/apple-export-format.md](docs/apple-export-format.md) — schema version, ZIP + CSV behavior, nested `Apple_Media_Services.zip`, enrichment
+- [docs/apple-export-format.md](docs/apple-export-format.md) — schema versions, ZIP + CSV behavior, nested `Apple_Media_Services.zip`, optional Daily Tracks for headline totals, enrichment
 - [docs/play-activity-columns.md](docs/play-activity-columns.md) — 2026 column reference
 - [docs/roadmap.md](docs/roadmap.md) — future ideas and maintenance
 
@@ -90,10 +92,11 @@ Put your privacy export ZIP parts under `test-data/apple-media-services/` (recom
 
 ```bash
 node scripts/inspect-export-headers.mjs test-data/apple-media-services
+node scripts/list-export-zip-contents.mjs test-data/apple-media-services
 node scripts/verify-local-export.mjs test-data/apple-media-services
 ```
 
-`inspect-export-headers` lists columns and validates headers. `verify-local-export` expands nested ZIPs, parses Play Activity, and runs the same stats path as the app — useful before opening the browser.
+`inspect-export-headers` lists columns and validates headers. **`list-export-zip-contents`** lists every path inside merged ZIPs after nested expansion (use `--count` for CSV row counts). **`verify-local-export`** parses Play Activity and optional Daily Tracks and prints a Play-vs-merged totals comparison — useful before opening the browser.
 
 ## Environment variables
 
