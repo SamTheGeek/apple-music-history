@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 
@@ -8,6 +6,11 @@
 
 # production
 /build
+/dist
+
+# local Apple exports (never commit); keep README
+/test-data/*
+!/test-data/README.md
 
 # misc
 .DS_Store

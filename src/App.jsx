@@ -1,52 +1,45 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-
-
-import Banner from "./components/Banner"
-import Results from "./components/Results"
-
-import Footer from './components/footer'
-
+import Banner from './components/Banner';
+import Results from './components/Results';
+import Footer from './components/footer';
 import ErrorBoundary from './components/ErrorBoundary';
 
-class App extends Component {
+function App() {
+  const [data, setData] = useState([]);
+  const [loadError, setLoadError] = useState(null);
 
-  constructor(props) {
-    super(props);
-    this.state = { data: [] };
-  }
+  let appToLoad;
 
-
-
-  render() {
-
-    
-
-
-    var appToLoad;
-
-    if (this.state.data.length > 0) {
-      appToLoad = <Results data={this.state.data} />;
-    } else {
-      appToLoad = <Banner dataResponseHandler={data => {
-        this.setState({
-          data: data
-        })        
-      }} />;
-    }
-
-    return (
-      <div className="App">
-        <ErrorBoundary>
-          {appToLoad}
-        </ErrorBoundary>
-        <Footer/>
-      </div>
-      
+  if (data.length > 0) {
+    appToLoad = <Results data={data} />;
+  } else {
+    appToLoad = (
+      <>
+        {loadError && (
+          <div className="errorDiv box load-error" role="alert">
+            {loadError}
+          </div>
+        )}
+        <Banner
+          dataResponseHandler={(rows) => {
+            setLoadError(null);
+            setData(rows);
+          }}
+          onError={setLoadError}
+        />
+      </>
     );
   }
+
+  return (
+    <div className="App">
+      <ErrorBoundary>{appToLoad}</ErrorBoundary>
+      <Footer />
+    </div>
+  );
 }
 
 export default App;

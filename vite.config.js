@@ -11,5 +11,12 @@ export default defineConfig(({ mode }) => {
     define: {
       'process.env.NODE_ENV': JSON.stringify(mode),
     },
+    worker: {
+      format: 'es',
+    },
+    test: {
+      environment: 'node',
+      include: ['src/**/*.test.{js,jsx}', 'src/**/__tests__/**/*.test.js'],
+    },
   };
 });

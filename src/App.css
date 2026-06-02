@@ -31,7 +31,8 @@
 
 .linechart {
     margin: 1em;
-    width: 650px;
+    max-width: 100%;
+    width: min(650px, 100%);
 }
 
 .reasons {
@@ -581,3 +582,106 @@ body {
  .shareButton {
     margin: 1em;
  }
+
+.upload-controls {
+    margin-bottom: 1.25rem;
+}
+
+.upload-controls label {
+    display: block;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.date-input {
+    display: block;
+    margin-top: 0.25rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+}
+
+.resolve-artists-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    max-width: 42rem;
+}
+
+.resolve-artists-option label {
+    font-weight: normal;
+    font-size: 0.95rem;
+}
+
+.file-input-wrap {
+    margin: 1rem 0;
+}
+
+.file-label {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.file-label:hover {
+    background: #0b5ed7;
+}
+
+.inputfile {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.status-text {
+    min-height: 1.5em;
+    color: #495057;
+}
+
+.load-error {
+    margin: 1em;
+}
+
+.loading-panel {
+    margin: 2em auto;
+}
+
+.chart-box {
+    overflow-x: auto;
+}
+
+.wrapped-box {
+    max-width: calc(2em + 700px);
+}
+
+.top-song-box {
+    min-height: 12rem;
+}
+
+@media (max-width: 768px) {
+    .year {
+        width: 100%;
+        max-width: 100%;
+        min-height: auto;
+    }
+
+    .box h1.display-3 {
+        font-size: 2rem;
+    }
+
+    .title-flex {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+}

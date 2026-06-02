@@ -1,0 +1,4 @@
+Song Name,Artist Name,Play Duration Milliseconds,Media Duration In Milliseconds,Event End Timestamp,Event Start Timestamp,UTC Offset In Seconds,End Reason Type,End Position In Milliseconds,Start Position In Milliseconds,Item Type,Media Type
+Test Song Alpha,Test Artist,180000,200000,2024-06-15T12:00:00,2024-06-15T11:57:00,-240,NATURAL_END_OF_TRACK,180000,0,SONG,MUSIC
+Test Song Alpha,Test Artist,120000,200000,2024-06-16T12:00:00,2024-06-16T11:58:00,-240,NATURAL_END_OF_TRACK,120000,0,SONG,MUSIC
+Other Track,Beta Band,90000,180000,2024-06-17T12:00:00,2024-06-17T11:58:30,-240,NATURAL_END_OF_TRACK,90000,0,SONG,MUSIC

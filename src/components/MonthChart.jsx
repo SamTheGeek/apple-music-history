@@ -35,10 +35,9 @@ class MonthChart extends Component {
         var linechart = (
             <Line
                 data={Computation.convetrData(this.props.months)}
-                width={600}
-                height={300}
                 options={{
-                    responsive: false,
+                    responsive: true,
+                    maintainAspectRatio: true,
                     elements: {
                         line: { tension: 0.3 },
                         point: { radius: 0 }
