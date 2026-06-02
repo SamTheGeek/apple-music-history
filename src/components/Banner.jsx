@@ -12,7 +12,6 @@ function Banner({ dataResponseHandler, onError, onProgress }) {
   const [resolveArtists, setResolveArtists] = useState(true);
   const filterDateId = useId();
   const fileInputId = useId();
-  const resolveArtistsId = useId();
 
   const handleFileChange = async (event) => {
     const fileList = event.target.files;
@@ -100,19 +99,22 @@ function Banner({ dataResponseHandler, onError, onProgress }) {
               To limit the report (e.g. only 2024 onward), choose a start date. Leave blank to use
               all plays in the file.
             </p>
-            <label htmlFor={filterDateId}>Start date (optional)</label>
+            <label className="upload-controls__date-label" htmlFor={filterDateId}>
+              Start date (optional)
+            </label>
             <input id={filterDateId} type="date" className="date-input" />
             <div className="resolve-artists-option">
-              <input
-                id={resolveArtistsId}
-                type="checkbox"
-                checked={resolveArtists}
-                onChange={(e) => setResolveArtists(e.target.checked)}
-                disabled={loading}
-              />
-              <label htmlFor={resolveArtistsId}>
-                Resolve missing artists via iTunes Search (network; caches results, up to 500
-                most-played tracks)
+              <label className="resolve-artists-option__label">
+                <input
+                  type="checkbox"
+                  checked={resolveArtists}
+                  onChange={(e) => setResolveArtists(e.target.checked)}
+                  disabled={loading}
+                />
+                <span className="resolve-artists-option__text">
+                  Resolve missing artists via iTunes Search (network; caches results, up to 500
+                  most-played tracks)
+                </span>
               </label>
             </div>
           </div>
