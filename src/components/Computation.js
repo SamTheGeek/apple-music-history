@@ -1,5 +1,7 @@
 // import {timestamp} from 'moment-timezone';
 
+import { UNKNOWN_ARTIST } from '../data/normalizePlayRow.js';
+
 function varExists(el) { 
     if (el !== null && typeof el !== "undefined" ) { 
       return true; 
@@ -9,6 +11,18 @@ function varExists(el) {
 }
 
 class Computation {
+
+    /**
+     * Apple exports sometimes emit Track Description "N/A" → unknown artist; exclude from all stats.
+     * @param {string} [songName]
+     * @param {string} [artistName]
+     * @returns {boolean}
+     */
+    static isExcludedPlaceholderListeningRow(songName, artistName) {
+        var song = String(songName ?? '').trim();
+        var artist = String(artistName ?? '').trim() || UNKNOWN_ARTIST;
+        return song === 'N/A' && artist === UNKNOWN_ARTIST;
+    }
 
     static monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -215,6 +229,10 @@ class Computation {
             var playCount = Number.isFinite(playCountRaw) && playCountRaw >= 1 ? Math.floor(playCountRaw) : 1;
 
             if (!song || !Number.isFinite(dur) || dur <= 0) {
+                continue;
+            }
+
+            if (Computation.isExcludedPlaceholderListeningRow(song, artist)) {
                 continue;
             }
 
@@ -427,7 +445,9 @@ class Computation {
         for (let index = 0; index < data.length; index++) {
             const play = data[index];
 
-            
+            if (Computation.isExcludedPlaceholderListeningRow(play["Song Name"], play["Artist Name"])) {
+                continue;
+            }
 
             if (varExists(play["Song Name"]) && varExists(play["Artist Name"]) && varExists(play["Play Duration Milliseconds"]) && varExists(play["Media Duration In Milliseconds"]) && varExists(play["Event End Timestamp"]) && varExists(play["UTC Offset In Seconds"])) {
                 reasons[play["End Reason Type"]] = reasons[play["End Reason Type"]] + 1;
