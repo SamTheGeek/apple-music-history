@@ -16,7 +16,7 @@ Based on the January 2026 **Apple Media Services** privacy export (~57k rows, **
 | **Matched Content** | Empty in samples | No |
 | **Play History Daily Tracks → Track Description** | `Artist - Song` in a *different* CSV | **Cannot join** — Play Activity has no `Track Identifier` column |
 
-**Conclusion:** Apple removed per-row artist from Play Activity. Recovery requires **external metadata** (e.g. iTunes Search by song + album) or accepting **Unknown Artist** for aggregate stats.
+**Conclusion:** Apple removed per-row artist from Play Activity for many rows. Without extra metadata, those rows show as **Unknown Artist** in the raw CSV path. This app can **optionally** fill many of them via iTunes Search (see [apple-export-format.md](apple-export-format.md)); remaining gaps stay Unknown Artist.
 
 ## Column groups (all 143)
 
@@ -76,4 +76,4 @@ Here **Container Artist Name** matches the band — because you were on CHVRCHES
 
 ## Enrichment in this app
 
-Optional **“Resolve missing artists”** (Banner checkbox) uses the **iTunes Search API** for the most-played unique tracks (capped per session), with results cached in `localStorage`. See [apple-export-format.md](apple-export-format.md).
+Optional **“Resolve missing artists via iTunes Search”** (checkbox on the upload banner, default on) uses the **iTunes Search API** for up to **500** unique unknown tracks per run (throttled; results cached in `localStorage`). See [apple-export-format.md](apple-export-format.md).

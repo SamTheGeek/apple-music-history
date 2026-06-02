@@ -4,7 +4,7 @@
 
 A client-side React app that analyzes your Apple Music listening history from Apple's privacy export. **Your data never leaves your browser** — parsing and stats run locally.
 
-Originally by [Pat Murray](https://patmurray.co/projects/apple-music-analyser/); maintained by [Sam Gross](https://samthegeek.net).
+**Stack:** Node.js 24, **Vite 7**, **React 19**, Bootstrap 5, Chart.js, Vitest. Originally by Pat Murray; maintained by [Sam Gross](https://samthegeek.net).
 
 ## Download your data
 
@@ -22,10 +22,19 @@ Inside the archive, the file this app uses is:
 
 ## Using the app
 
-1. Open the site or run locally (see below).
+1. Open [the live site](https://music.samthegeek.net) or run locally (see below).
 2. Optionally set a **start date** to limit the report.
-3. Upload **Apple Music Play Activity.csv** or the **full Apple Media Services ZIP** (select all parts if split).
-4. Wait for parsing and stats — large exports may take a minute.
+3. Upload **Apple Music Play Activity.csv** or the **full Apple Media Services ZIP** (select all parts if Apple split the download).
+4. Optionally leave **“Resolve missing artists via iTunes Search”** enabled (default) so tracks without an artist in the CSV can be labeled from Apple’s public search API (see [docs/apple-export-format.md](docs/apple-export-format.md)).
+5. Wait for parsing and stats — large exports may take a minute.
+
+## Documentation
+
+All guides live under **[docs/](docs/)** (start at [docs/README.md](docs/README.md)):
+
+- [docs/apple-export-format.md](docs/apple-export-format.md) — schema version, ZIP + CSV behavior, nested `Apple_Media_Services.zip`, enrichment
+- [docs/play-activity-columns.md](docs/play-activity-columns.md) — 2026 column reference
+- [docs/roadmap.md](docs/roadmap.md) — future ideas and maintenance
 
 ## Getting started (development)
 
@@ -52,31 +61,30 @@ npm install
 npm start
 ```
 
-Dev server: [http://localhost:5173](http://localhost:5173)
+**Dev server:** [http://localhost:5173](http://localhost:5173) (`npm start` runs Vite.)
 
 ```bash
-npm test          # unit tests
-npm run build     # production build → dist/
-npm run preview   # preview production build
+npm test          # Vitest unit tests
+npm run build     # production bundle → dist/
+npm run preview   # serve dist/ locally
 ```
 
-Deploy the **`dist/`** folder (e.g. Netlify).
+Deploy the contents of **`dist/`** (for example Netlify builds from this repo and publishes `dist/`).
 
 ### Local export testing
 
-Place your privacy export under `test-data/apple-media-services/` (gitignored), then:
+Put your privacy export ZIP parts under `test-data/apple-media-services/` (recommended; that path is gitignored), or directly under `test-data/` if you prefer. Then:
 
 ```bash
 node scripts/inspect-export-headers.mjs test-data/apple-media-services
+node scripts/verify-local-export.mjs test-data/apple-media-services
 ```
 
-See [docs/apple-export-format.md](docs/apple-export-format.md) for schema details and how to handle column changes.
-
-Column reference for the 2026 export (no `Artist Name`): [docs/play-activity-columns.md](docs/play-activity-columns.md).
+`inspect-export-headers` lists columns and validates headers. `verify-local-export` expands nested ZIPs, parses Play Activity, and runs the same stats path as the app — useful before opening the browser.
 
 ## Environment variables
 
 | Variable | Description |
 |----------|-------------|
-| `VITE_SENTRY_DSN` | Optional Sentry DSN; omit to disable error reporting |
+| `VITE_SENTRY_DSN` | Optional Sentry DSN; omit to disable client error reporting |
 | `VITE_PUBLIC_URL` | Base URL for deployed assets (default `/`) |

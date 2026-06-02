@@ -22,7 +22,7 @@ Apple's export now includes several Apple Music files, for example:
 
 ### Artist enrichment v2
 
-v1 (shipped): iTunes Search for top 500 unknown unique tracks + `localStorage` cache.
+**v1 (shipped in 2026 revival):** iTunes Search for up to **500** unknown unique `(song, album)` keys (row-weighted by play count), ~**120 ms** between requests, **`localStorage`** cache — see `enrichArtists.js`. Rows that still miss a match remain **Unknown Artist**; there is no permanent “stuck” state beyond opting out or clearing cache.
 
 **Future improvements:**
 

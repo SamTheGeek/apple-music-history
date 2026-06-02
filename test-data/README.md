@@ -1,20 +1,34 @@
 # Local test data (gitignored except this file)
 
-Drop your Apple privacy export ZIP parts here (any filename is fine), for example:
+Use this folder for **real** Apple privacy exports while developing. **Do not commit** ZIPs or CSVs — they contain personal listening history.
+
+## Layout
+
+Recommended (also gitignored via `test-data/apple-media-services/`):
 
 ```text
 test-data/
-  Apple Media Services Information Part 1 of 2.zip
-  Apple Media Services Information Part 2 of 2.zip
+  apple-media-services/
+    Apple Media Services Information Part 1 of 2.zip
+    Apple Media Services Information Part 2 of 2.zip
 ```
 
-Apple nests the real data inside `Apple_Media_Services.zip` — the app handles that automatically.
+You can instead place ZIP parts **directly under `test-data/`**; the helper scripts take a directory and scan for `.zip` files in that directory only (not subfolders).
+
+Apple nests the real archive as **`Apple_Media_Services.zip`** inside the privacy ZIP — the app and `verify-local-export` unwrap that automatically.
 
 ## Verify without the browser
 
+From the **repository root** (Node 24):
+
 ```bash
-node scripts/inspect-export-headers.mjs test-data
-node scripts/verify-local-export.mjs test-data
+node scripts/inspect-export-headers.mjs test-data/apple-media-services
+node scripts/verify-local-export.mjs test-data/apple-media-services
 ```
 
-Do **not** commit real exports — they contain personal listening history.
+Use `test-data` instead of `test-data/apple-media-services` if your ZIPs sit at the top level.
+
+- **inspect-export-headers** — walk directories, print `SCHEMA_VERSION`, validate Play Activity headers.
+- **verify-local-export** — merge ZIP parts, expand nested ZIPs, parse CSV, run `Computation` smoke stats.
+
+See [docs/apple-export-format.md](../docs/apple-export-format.md) and the main [README](../README.md).

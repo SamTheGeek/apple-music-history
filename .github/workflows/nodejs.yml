@@ -1,4 +1,5 @@
 name: Node CI
+# Installs deps, runs Vitest, builds Vite → dist/
 
 on:
   push:
