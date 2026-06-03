@@ -46,7 +46,7 @@ class MonthChart extends Component {
 
         var linechart = (
             <Line
-                data={Computation.convetrData(this.props.months)}
+                data={Computation.convertMonthChartData(this.props.months)}
                 options={{
                     responsive: true,
                     maintainAspectRatio: true,

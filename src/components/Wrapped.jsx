@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { formatInteger } from '../lib/formatNumbers.js';
-import html2canvas from 'html2canvas';
 
 function downloadDataUrl(dataUrl, filename) {
   const link = document.createElement('a');
@@ -10,6 +9,7 @@ function downloadDataUrl(dataUrl, filename) {
 }
 
 function Wrapped({ year }) {
+  const [sharing, setSharing] = useState(false);
   const artistCount = year.artists.length > 5 ? 5 : year.artists.length;
   const songCount = year.songs.length > 5 ? 5 : year.songs.length;
   const titleString = `My Music — ${year.year}`;
@@ -61,24 +61,36 @@ function Wrapped({ year }) {
       <div className="shareButton">
         <button
           type="button"
+          disabled={sharing}
           onClick={() => {
             const el = document.getElementById('annualwrapped');
-            if (!el) return;
-            const bg =
-              typeof window !== 'undefined'
-                ? window.getComputedStyle(el).backgroundColor || 'rgb(225, 29, 72)'
-                : 'rgb(225, 29, 72)';
-            html2canvas(el, {
-              scale: 2,
-              backgroundColor: bg,
-              logging: false,
-              useCORS: true,
-            }).then((canvas) => {
-              downloadDataUrl(canvas.toDataURL('image/png'), 'mymusic.png');
-            });
+            if (!el || sharing) return;
+            setSharing(true);
+            import('html2canvas')
+              .then(({ default: html2canvas }) => {
+                const bg =
+                  typeof window !== 'undefined'
+                    ? window.getComputedStyle(el).backgroundColor || 'rgb(225, 29, 72)'
+                    : 'rgb(225, 29, 72)';
+                return html2canvas(el, {
+                  scale: 2,
+                  backgroundColor: bg,
+                  logging: false,
+                  useCORS: true,
+                });
+              })
+              .then((canvas) => {
+                downloadDataUrl(canvas.toDataURL('image/png'), 'mymusic.png');
+              })
+              .catch(() => {
+                /* user agent or canvas may block export */
+              })
+              .finally(() => {
+                setSharing(false);
+              });
           }}
         >
-          Share &apos;My {year.year} in Music&apos;
+          {sharing ? 'Preparing image…' : `Share 'My ${year.year} in Music'`}
         </button>
       </div>
     </div>

@@ -1,5 +1,3 @@
-// import {timestamp} from 'moment-timezone';
-
 import { UNKNOWN_ARTIST } from '../data/normalizePlayRow.js';
 import { getCssColorVar } from '../lib/chartTheme.js';
 
@@ -38,7 +36,7 @@ class Computation {
     }
 
 
-    static convetrData(input) {
+    static convertMonthChartData(input) {
         const fillPlay = getCssColorVar('--chart-fill-play', 'rgba(251, 126, 42, 0.18)');
         const fillSkip = getCssColorVar('--chart-fill-skip', 'rgba(109, 185, 154, 0.18)');
         const linePlay = getCssColorVar('--chart-line-play', '#fb7e2a');

@@ -5,6 +5,7 @@ import './App.css';
 import Banner from './components/Banner';
 import Footer from './components/footer';
 import ErrorBoundary from './components/ErrorBoundary';
+import LoadingPanel from './components/LoadingPanel';
 
 const Results = lazy(() => import('./components/Results'));
 
@@ -42,27 +43,7 @@ function App() {
   if (hasReport) {
     appToLoad = (
       <Suspense
-        fallback={
-          <div className="loading-panel" aria-busy="true">
-            <p className="lead" style={{ textAlign: 'center' }}>
-              Loading report…
-            </p>
-            <div className="sk-fading-circle">
-              <div className="sk-circle1 sk-circle" />
-              <div className="sk-circle2 sk-circle" />
-              <div className="sk-circle3 sk-circle" />
-              <div className="sk-circle4 sk-circle" />
-              <div className="sk-circle5 sk-circle" />
-              <div className="sk-circle6 sk-circle" />
-              <div className="sk-circle7 sk-circle" />
-              <div className="sk-circle8 sk-circle" />
-              <div className="sk-circle9 sk-circle" />
-              <div className="sk-circle10 sk-circle" />
-              <div className="sk-circle11 sk-circle" />
-              <div className="sk-circle12 sk-circle" />
-            </div>
-          </div>
-        }
+        fallback={<LoadingPanel as="p" className="lead" text="Loading report…" />}
       >
         <Results data={data} />
       </Suspense>
