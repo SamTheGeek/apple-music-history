@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import numeral from 'numeral';
+import { formatInteger } from '../lib/formatNumbers.js';
 import Computation from "./Computation";
 
 
@@ -32,7 +32,7 @@ class YearCollapse extends Component {
             var box = <div className="box reason" key={element.key}>
                 <h3>{element.value.name}</h3>
                 <h5>{element.value.artist}</h5>
-                <p className="lead">{Computation.convertTime(element.value.time)} ({numeral(element.value.plays).format('0,0')} Plays)</p>
+                <p className="lead">{Computation.convertTime(element.value.time)} ({formatInteger(element.value.plays)} Plays)</p>
             </div>
             songsYearBox.push(box);
 

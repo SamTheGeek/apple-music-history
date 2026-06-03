@@ -54,7 +54,6 @@ const CalendarHeatmap = ({
   showWeekdayLabels = false,
   classForValue = () => '',
   titleForValue,
-  tooltipDataAttrs,
 }) => {
   const valueMap = new Map();
   values.forEach((value) => {
@@ -85,7 +84,6 @@ const CalendarHeatmap = ({
               const dateKey = date ? toDateKey(date) : null;
               const value = dateKey ? valueMap.get(dateKey) : null;
               const resolvedClass = date ? classForValue(value) : 'color-empty';
-              const tooltipAttrs = date && tooltipDataAttrs ? tooltipDataAttrs(value) : {};
               const title = date && titleForValue ? titleForValue(value) : '';
 
               return (
@@ -96,7 +94,6 @@ const CalendarHeatmap = ({
                   title={title}
                   aria-label={title || dateKey || 'No data'}
                   role="img"
-                  {...tooltipAttrs}
                 />
               );
             })}

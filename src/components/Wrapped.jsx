@@ -1,5 +1,5 @@
 import React from 'react';
-import numeral from 'numeral';
+import { formatInteger } from '../lib/formatNumbers.js';
 import html2canvas from 'html2canvas';
 
 function downloadDataUrl(dataUrl, filename) {
@@ -40,7 +40,7 @@ function Wrapped({ year }) {
         <div className="left">
           <h2 className="subtitle">I listened to</h2>
           <div className="number">
-            {numeral(parseInt(year.totalTime, 10) / 1000 / 60).format('0,0')}
+            {formatInteger(Math.round(parseInt(year.totalTime, 10) / 1000 / 60))}
           </div>
           <h3 className="small">minutes of music</h3>
         </div>

@@ -30,19 +30,13 @@ export default defineConfig(({ mode }) => {
             if (id.includes('@sentry')) {
               return 'sentry-vendor';
             }
-            if (id.includes('papaparse') || id.includes('fflate')) {
-              return 'data-vendor';
-            }
-            if (id.includes('match-sorter')) {
+            if (id.includes('papaparse') || id.includes('fflate') || id.includes('match-sorter')) {
               return 'data-vendor';
             }
             if (id.includes('html2canvas')) {
               return 'canvas-vendor';
             }
             if (id.includes('bootstrap')) {
-              return 'ui-vendor';
-            }
-            if (id.includes('numeral') || id.includes('react-tooltip')) {
               return 'ui-vendor';
             }
             return 'vendor';

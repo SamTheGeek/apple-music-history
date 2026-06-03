@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import Computation from './Computation';
-import numeral from 'numeral';
+import { formatInteger } from '../lib/formatNumbers.js';
 import { computeTopAsync } from '../lib/computeTopAsync.js';
 
 import CalendarHeatmap from './CalendarHeatmap';
-import { Tooltip } from 'react-tooltip';
 import HourHeatmap from './HourHeatmap';
 
 import ReasonsBox from './ReasonsBox';
@@ -183,7 +182,7 @@ class Results extends Component {
           </div>
           <div>
             <hr className="my-2" />
-            <p className="lead">{numeral(artist.value.plays).format('0,0')} Plays</p>
+            <p className="lead">{formatInteger(artist.value.plays)} Plays</p>
             <p>{Computation.convertTime(artist.value.time)}</p>
           </div>
         </div>,
@@ -275,15 +274,6 @@ class Results extends Component {
                 }
                 return '';
               }}
-              tooltipDataAttrs={(value) => {
-                if (value && value.date != null) {
-                  return {
-                    'data-tooltip-id': 'heatmap-tooltip',
-                    'data-tooltip-content': `${Computation.convertTime(value.count)} on ${value.date}`,
-                  };
-                }
-                return { 'data-tooltip-id': 'heatmap-tooltip' };
-              }}
               classForValue={(value) => {
                 if (!value) {
                   return 'color-empty';
@@ -292,10 +282,9 @@ class Results extends Component {
                 return `color-scale-${number}`;
               }}
             />
-            <Tooltip id="heatmap-tooltip" />
             <p>
-              There were <strong>{numeral(dayswithoutmusic).format('0,0')}</strong> out of{' '}
-              <strong>{numeral(daysTodayCount).format('0,0')}</strong> days you did not listen to
+              There were <strong>{formatInteger(dayswithoutmusic)}</strong> out of{' '}
+              <strong>{formatInteger(daysTodayCount)}</strong> days you did not listen to
               music.
             </p>
           </div>

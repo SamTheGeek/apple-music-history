@@ -1,6 +1,6 @@
 import React from 'react';
 import Computation from './Computation';
-import numeral from 'numeral';
+import { formatInteger } from '../lib/formatNumbers.js';
 
 function TotalsBoxes({ totals, songs, artists, day }) {
   return (
@@ -14,7 +14,7 @@ function TotalsBoxes({ totals, songs, artists, day }) {
           </p>
         </div>
         <div>
-          <h2>{numeral(totals.totalPlays).format('0,0')}</h2>
+          <h2>{formatInteger(totals.totalPlays)}</h2>
           <p className="lead">plays</p>
         </div>
       </div>
@@ -31,12 +31,12 @@ function TotalsBoxes({ totals, songs, artists, day }) {
 
       <div className="box year" key="totalSongs">
         <div>
-          <h2>{numeral(songs).format('0,0')}</h2>
+          <h2>{formatInteger(songs)}</h2>
           <p className="lead">songs</p>
         </div>
         <div>
           <hr className="my-2" />
-          <h2>{numeral(artists).format('0,0')}</h2>
+          <h2>{formatInteger(artists)}</h2>
           <p className="lead">artists</p>
         </div>
       </div>

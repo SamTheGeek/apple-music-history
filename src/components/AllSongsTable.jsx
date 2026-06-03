@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import numeral from 'numeral';
 import { matchSorter } from 'match-sorter';
+import { formatDurationSeconds } from '../lib/formatNumbers.js';
 
 const PAGE_SIZE = 100;
 
@@ -15,13 +15,13 @@ const AllSongsTable = ({ addExcluded, songs = [] }) => {
 
         if (nameFilter) {
             filtered = matchSorter(filtered, nameFilter, {
-                keys: [(item) => item.value.name]
+                keys: [(item) => item.value.name],
             });
         }
 
         if (artistFilter) {
             filtered = matchSorter(filtered, artistFilter, {
-                keys: [(item) => item.value.artist]
+                keys: [(item) => item.value.artist],
             });
         }
 
@@ -58,7 +58,7 @@ const AllSongsTable = ({ addExcluded, songs = [] }) => {
             selector: (row) => row.value.time,
             sortable: true,
             align: 'right',
-            cell: (row) => numeral(row.value.time / 1000).format('00:00:00')
+            cell: (row) => formatDurationSeconds(row.value.time / 1000)
         },
         {
             id: 'skippedTime',
@@ -66,7 +66,7 @@ const AllSongsTable = ({ addExcluded, songs = [] }) => {
             selector: (row) => row.value.missedTime,
             sortable: true,
             align: 'right',
-            cell: (row) => numeral(row.value.missedTime / 1000).format('00:00:00')
+            cell: (row) => formatDurationSeconds(row.value.missedTime / 1000)
         },
         {
             id: 'exclude',

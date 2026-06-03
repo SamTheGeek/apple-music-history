@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import numeral from 'numeral';
+import { formatInteger } from '../lib/formatNumbers.js';
 
 
 class ReasonsBox extends Component {
@@ -46,7 +46,7 @@ class ReasonsBox extends Component {
             if (element.key !== "" && element.key !== "QUICK_PLAY" && element.key !== "NOT_APPLICABLE") {
                 var box2 = <div className="box reason" key={element.key}>
                     <h3>{reasons[element.key]}</h3>
-                    <p className="lead">{numeral(element.value).format('0,0')} Times</p>
+                    <p className="lead">{formatInteger(element.value)} Times</p>
                 </div>
                 reasonsBoxes.push(box2);
             }

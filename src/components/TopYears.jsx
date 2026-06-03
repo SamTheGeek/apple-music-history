@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import numeral from 'numeral';
+import { formatInteger } from '../lib/formatNumbers.js';
 import Computation from './Computation';
 import { fetchItunesArtworkUrl } from '../lib/itunesArtwork.js';
 
@@ -39,7 +39,7 @@ function YearBox({ year }) {
       </div>
       <div>
         <hr className="my-2" />
-        <p className="lead">{numeral(year.value[0].value.plays).format('0,0')} Plays</p>
+        <p className="lead">{formatInteger(year.value[0].value.plays)} Plays</p>
         <p>{Computation.convertTime(year.value[0].value.time)}</p>
       </div>
     </div>
