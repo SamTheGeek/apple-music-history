@@ -7,7 +7,7 @@
     "node": ">=24.0.0"
   },
   "dependencies": {
-    "@sentry/react": "^10.55.0",
+    "@sentry/react": "^10.56.0",
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.1",
     "fflate": "^0.8.3",
